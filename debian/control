@@ -1,0 +1,12 @@
+Source: ros-groovy-tf2-msgs
+Section: misc
+Priority: extra
+Maintainer: Tully Foote <tfoote@willowgarage.com>
+Build-Depends: debhelper (>= 7.0.50~), ros-groovy-message-generation,ros-groovy-geometry-msgs,ros-groovy-actionlib-msgs,ros-groovy-catkin
+Homepage: http://www.ros.org/wiki/tf2_msgs
+Standards-Version: 3.9.2
+
+Package: ros-groovy-tf2-msgs
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends}, ros-groovy-message-generation,ros-groovy-actionlib-msgs,ros-groovy-geometry-msgs
+Description: tf2_msgs
