@@ -1,0 +1,12 @@
+Source: ros-groovy-tf2-tools
+Section: misc
+Priority: extra
+Maintainer: Tully Foote <tfoote@willowgarage.com>
+Build-Depends: debhelper (>= 7.0.50~), ros-groovy-catkin,ros-groovy-tf2-msgs,ros-groovy-tf2-ros,ros-groovy-tf2
+Homepage: http://www.ros.org/wiki/tf2_tools
+Standards-Version: 3.9.2
+
+Package: ros-groovy-tf2-tools
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends}, ros-groovy-tf2-msgs,ros-groovy-tf2-ros,ros-groovy-tf2
+Description: tf2_tools
