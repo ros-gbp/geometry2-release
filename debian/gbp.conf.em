@@ -1,3 +1,3 @@
 [git-buildpackage]
-upstream-branch=release/tf2_kdl/0.3.5
+upstream-branch=@(release_tag)
 upstream-tree=branch
