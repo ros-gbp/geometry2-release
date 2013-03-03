@@ -15,5 +15,5 @@ tracks:
     release_tag: :{version}
     ros_distro: groovy
     vcs_type: git
-    vcs_uri: https://github.com/ros-gbp/geometry_experimental-release.git
+    vcs_uri: https://github.com/ros/geometry-experimental.git
     version: :{auto}
