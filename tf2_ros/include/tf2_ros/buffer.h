@@ -36,17 +36,18 @@
 #include <tf2/buffer_core.h>
 #include <tf2_msgs/FrameGraph.h>
 #include <ros/ros.h>
+#include <tf2/convert.h>
 
 
-namespace tf2
+namespace tf2_ros
 {
 
   // extend the BufferInterface class and BufferCore class
-  class Buffer: public BufferInterface, public BufferCore
+  class Buffer: public BufferInterface, public tf2::BufferCore
   {
   public:
-    using BufferCore::lookupTransform;
-    using BufferCore::canTransform;
+    using tf2::BufferCore::lookupTransform;
+    using tf2::BufferCore::canTransform;
 
     /**
      * @brief  Constructor for a Buffer object

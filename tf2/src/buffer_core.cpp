@@ -34,9 +34,9 @@
 #include "tf2/exceptions.h"
 #include "tf2_msgs/TF2Error.h"
 
-#include <ros/assert.h>
-#include <ros/console.h>
-#include "tf2/LinearMath/btTransform.h"
+#include <assert.h>
+#include <console_bridge/console.h>
+#include "tf2/LinearMath/Transform.h"
 
 //legacy
 //#include "tf/tf.h"
@@ -51,31 +51,31 @@ namespace tf2
 const double tf2::BufferCore::DEFAULT_CACHE_TIME;
 
 /** \brief convert Transform msg to Transform */
-void transformMsgToTF2(const geometry_msgs::Transform& msg, btTransform& bt)
-{bt = btTransform(btQuaternion(msg.rotation.x, msg.rotation.y, msg.rotation.z, msg.rotation.w), btVector3(msg.translation.x, msg.translation.y, msg.translation.z));}
+void transformMsgToTF2(const geometry_msgs::Transform& msg, tf2::Transform& tf2)
+{tf2 = tf2::Transform(tf2::Quaternion(msg.rotation.x, msg.rotation.y, msg.rotation.z, msg.rotation.w), tf2::Vector3(msg.translation.x, msg.translation.y, msg.translation.z));}
 
 /** \brief convert Transform to Transform msg*/
-void transformTF2ToMsg(const btTransform& bt, geometry_msgs::Transform& msg)
+void transformTF2ToMsg(const tf2::Transform& tf2, geometry_msgs::Transform& msg)
 {
-  msg.translation.x = bt.getOrigin().x();
-  msg.translation.y = bt.getOrigin().y();
-  msg.translation.z = bt.getOrigin().z();
-  msg.rotation.x = bt.getRotation().x();
-  msg.rotation.y = bt.getRotation().y();
-  msg.rotation.z = bt.getRotation().z();
-  msg.rotation.w = bt.getRotation().w();
+  msg.translation.x = tf2.getOrigin().x();
+  msg.translation.y = tf2.getOrigin().y();
+  msg.translation.z = tf2.getOrigin().z();
+  msg.rotation.x = tf2.getRotation().x();
+  msg.rotation.y = tf2.getRotation().y();
+  msg.rotation.z = tf2.getRotation().z();
+  msg.rotation.w = tf2.getRotation().w();
 }
 
 /** \brief convert Transform to Transform msg*/
-void transformTF2ToMsg(const btTransform& bt, geometry_msgs::TransformStamped& msg, ros::Time stamp, const std::string& frame_id, const std::string& child_frame_id)
+void transformTF2ToMsg(const tf2::Transform& tf2, geometry_msgs::TransformStamped& msg, ros::Time stamp, const std::string& frame_id, const std::string& child_frame_id)
 {
-  transformTF2ToMsg(bt, msg.transform);
+  transformTF2ToMsg(tf2, msg.transform);
   msg.header.stamp = stamp;
   msg.header.frame_id = frame_id;
   msg.child_frame_id = child_frame_id;
 }
 
-void transformTF2ToMsg(const btQuaternion& orient, const btVector3& pos, geometry_msgs::Transform& msg)
+void transformTF2ToMsg(const tf2::Quaternion& orient, const tf2::Vector3& pos, geometry_msgs::Transform& msg)
 {
   msg.translation.x = pos.x();
   msg.translation.y = pos.y();
@@ -86,7 +86,7 @@ void transformTF2ToMsg(const btQuaternion& orient, const btVector3& pos, geometr
   msg.rotation.w = orient.w();
 }
 
-void transformTF2ToMsg(const btQuaternion& orient, const btVector3& pos, geometry_msgs::TransformStamped& msg, ros::Time stamp, const std::string& frame_id, const std::string& child_frame_id)
+void transformTF2ToMsg(const tf2::Quaternion& orient, const tf2::Vector3& pos, geometry_msgs::TransformStamped& msg, ros::Time stamp, const std::string& frame_id, const std::string& child_frame_id)
 {
   transformTF2ToMsg(orient, pos, msg.transform);
   msg.header.stamp = stamp;
@@ -128,7 +128,7 @@ bool BufferCore::warnFrameId(const char* function_name_arg, const std::string& f
   {
     std::stringstream ss;
     ss << "Invalid argument passed to "<< function_name_arg <<" in tf2 frame_ids cannot be empty";
-    ROS_WARN("%s",ss.str().c_str());
+    logWarn("%s",ss.str().c_str());
     return true;
   }
 
@@ -136,7 +136,7 @@ bool BufferCore::warnFrameId(const char* function_name_arg, const std::string& f
   {
     std::stringstream ss;
     ss << "Invalid argument \"" << frame_id << "\" passed to "<< function_name_arg <<" in tf2 frame_ids cannot start with a '/' like: ";
-    ROS_WARN("%s",ss.str().c_str());
+    logWarn("%s",ss.str().c_str());
     return true;
   }
 
@@ -221,26 +221,26 @@ bool BufferCore::setTransform(const geometry_msgs::TransformStamped& transform_i
   bool error_exists = false;
   if (stripped.child_frame_id == stripped.header.frame_id)
   {
-    ROS_ERROR("TF_SELF_TRANSFORM: Ignoring transform from authority \"%s\" with frame_id and child_frame_id  \"%s\" because they are the same",  authority.c_str(), stripped.child_frame_id.c_str());
+    logError("TF_SELF_TRANSFORM: Ignoring transform from authority \"%s\" with frame_id and child_frame_id  \"%s\" because they are the same",  authority.c_str(), stripped.child_frame_id.c_str());
     error_exists = true;
   }
 
   if (stripped.child_frame_id == "")
   {
-    ROS_ERROR("TF_NO_CHILD_FRAME_ID: Ignoring transform from authority \"%s\" because child_frame_id not set ", authority.c_str());
+    logError("TF_NO_CHILD_FRAME_ID: Ignoring transform from authority \"%s\" because child_frame_id not set ", authority.c_str());
     error_exists = true;
   }
 
   if (stripped.header.frame_id == "")
   {
-    ROS_ERROR("TF_NO_FRAME_ID: Ignoring transform with child_frame_id \"%s\"  from authority \"%s\" because frame_id not set", stripped.child_frame_id.c_str(), authority.c_str());
+    logError("TF_NO_FRAME_ID: Ignoring transform with child_frame_id \"%s\"  from authority \"%s\" because frame_id not set", stripped.child_frame_id.c_str(), authority.c_str());
     error_exists = true;
   }
 
   if (std::isnan(stripped.transform.translation.x) || std::isnan(stripped.transform.translation.y) || std::isnan(stripped.transform.translation.z)||
       std::isnan(stripped.transform.rotation.x) ||       std::isnan(stripped.transform.rotation.y) ||       std::isnan(stripped.transform.rotation.z) ||       std::isnan(stripped.transform.rotation.w))
   {
-    ROS_ERROR("TF_NAN_INPUT: Ignoring transform for child_frame_id \"%s\" from authority \"%s\" because of a nan value in the transform (%f %f %f) (%f %f %f %f)",
+    logError("TF_NAN_INPUT: Ignoring transform for child_frame_id \"%s\" from authority \"%s\" because of a nan value in the transform (%f %f %f) (%f %f %f %f)",
               stripped.child_frame_id.c_str(), authority.c_str(),
               stripped.transform.translation.x, stripped.transform.translation.y, stripped.transform.translation.z,
               stripped.transform.rotation.x, stripped.transform.rotation.y, stripped.transform.rotation.z, stripped.transform.rotation.w
@@ -264,7 +264,7 @@ bool BufferCore::setTransform(const geometry_msgs::TransformStamped& transform_i
     }
     else
     {
-      ROS_WARN("TF_OLD_DATA ignoring data from the past for frame %s at time %g according to authority %s\nPossible reasons are listed at ", stripped.child_frame_id.c_str(), stripped.header.stamp.toSec(), authority.c_str());
+      logWarn("TF_OLD_DATA ignoring data from the past for frame %s at time %g according to authority %s\nPossible reasons are listed at ", stripped.child_frame_id.c_str(), stripped.header.stamp.toSec(), authority.c_str());
       return false;
     }
   }
@@ -473,16 +473,16 @@ struct TransformAccum
       break;
     case SourceParentOfTarget:
       {
-        btQuaternion inv_target_quat = target_to_top_quat.inverse();
-        btVector3 inv_target_vec = quatRotate(inv_target_quat, -target_to_top_vec);
+        tf2::Quaternion inv_target_quat = target_to_top_quat.inverse();
+        tf2::Vector3 inv_target_vec = quatRotate(inv_target_quat, -target_to_top_vec);
         result_vec = inv_target_vec;
         result_quat = inv_target_quat;
         break;
       }
     case FullPath:
       {
-        btQuaternion inv_target_quat = target_to_top_quat.inverse();
-        btVector3 inv_target_vec = quatRotate(inv_target_quat, -target_to_top_vec);
+        tf2::Quaternion inv_target_quat = target_to_top_quat.inverse();
+        tf2::Vector3 inv_target_vec = quatRotate(inv_target_quat, -target_to_top_vec);
 
      	result_vec = quatRotate(inv_target_quat, source_to_top_vec) + inv_target_vec;
         result_quat = inv_target_quat * source_to_top_quat;
@@ -495,13 +495,13 @@ struct TransformAccum
 
   TransformStorage st;
   ros::Time time;
-  btQuaternion source_to_top_quat;
-  btVector3 source_to_top_vec;
-  btQuaternion target_to_top_quat;
-  btVector3 target_to_top_vec;
+  tf2::Quaternion source_to_top_quat;
+  tf2::Vector3 source_to_top_vec;
+  tf2::Quaternion target_to_top_quat;
+  tf2::Vector3 target_to_top_vec;
 
-  btQuaternion result_quat;
-  btVector3 result_vec;
+  tf2::Quaternion result_quat;
+  tf2::Vector3 result_vec;
 };
 
 geometry_msgs::TransformStamped BufferCore::lookupTransform(const std::string& target_frame,
@@ -536,8 +536,8 @@ geometry_msgs::TransformStamped BufferCore::lookupTransform(const std::string& t
     case tf2_msgs::TF2Error::LOOKUP_ERROR:
       throw LookupException(error_string);
     default:
-      ROS_ERROR("Unknown error code: %d", retval);
-      ROS_BREAK();
+      logError("Unknown error code: %d", retval);
+      assert(0);
     }
   }
 
@@ -561,10 +561,10 @@ geometry_msgs::TransformStamped BufferCore::lookupTransform(const std::string& t
   geometry_msgs::TransformStamped temp1 =  lookupTransform(fixed_frame, source_frame, source_time);
   geometry_msgs::TransformStamped temp2 =  lookupTransform(target_frame, fixed_frame, target_time);
   
-  btTransform bt1, bt2;
-  transformMsgToTF2(temp1.transform, bt1);
-  transformMsgToTF2(temp2.transform, bt2);
-  transformTF2ToMsg(bt2*bt1, output.transform);
+  tf2::Transform tf1, tf2;
+  transformMsgToTF2(temp1.transform, tf1);
+  transformMsgToTF2(temp2.transform, tf2);
+  transformTF2ToMsg(tf2*tf1, output.transform);
   output.header.stamp = temp2.header.stamp;
   output.header.frame_id = target_frame;
   output.child_frame_id = source_frame;

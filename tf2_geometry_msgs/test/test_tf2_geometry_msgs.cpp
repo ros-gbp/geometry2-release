@@ -34,9 +34,10 @@
 #include <tf2_ros/transform_listener.h>
 #include <ros/ros.h>
 #include <gtest/gtest.h>
+#include <tf2_ros/buffer.h>
+#include <tf2_geometry_msgs/tf2_geometry_msgs.h>
 
-
-tf2::Buffer* tf_buffer;
+tf2_ros::Buffer* tf_buffer;
 static const double EPS = 1e-3;
 
 
@@ -128,7 +129,7 @@ int main(int argc, char **argv){
   ros::init(argc, argv, "test");
   ros::NodeHandle n;
 
-  tf_buffer = new tf2::Buffer();
+  tf_buffer = new tf2_ros::Buffer();
 
   // populate buffer
   geometry_msgs::TransformStamped t;

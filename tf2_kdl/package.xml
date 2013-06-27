@@ -1,10 +1,10 @@
 <package>
   <name>tf2_kdl</name>
-  <version>0.3.6</version>
+  <version>0.4.0</version>
   <description>
     KDL binding for tf2
   </description>
-  <maintainer email="tfoote@willowgarage.com">Tully Foote</maintainer>
+  <maintainer email="tfoote@osrfoundation.org">Tully Foote</maintainer>
   <author>Wim Meeussen</author>
   <license>BSD</license>
 
@@ -12,10 +12,12 @@
 
   <buildtool_depend>catkin</buildtool_depend>
  
+  <build_depend>eigen</build_depend> <!-- needed by kdl interally -->
   <build_depend>orocos_kdl</build_depend>
   <build_depend>tf2</build_depend>
   <build_depend>tf2_ros</build_depend>
 
+  <run_depend>eigen</run_depend>
   <run_depend>orocos_kdl</run_depend>
   <run_depend>tf2</run_depend>
   <run_depend>tf2_ros</run_depend>
