@@ -1,0 +1,12 @@
+Source: ros-hydro-test-tf2
+Section: misc
+Priority: extra
+Maintainer: "Tully Foote <tfoote@osrfoundation.org>"
+Build-Depends: debhelper (>= 7.0.50~), ros-hydro-catkin, ros-hydro-rosconsole, ros-hydro-roscpp, ros-hydro-rostest, ros-hydro-tf, ros-hydro-tf2, ros-hydro-tf2-bullet, ros-hydro-tf2-geometry-msgs, ros-hydro-tf2-kdl, ros-hydro-tf2-msgs, ros-hydro-tf2-ros
+Homepage: http://www.ros.org/wiki/geometry_experimental
+Standards-Version: 3.9.2
+
+Package: ros-hydro-test-tf2
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends}, ros-hydro-rosconsole, ros-hydro-roscpp, ros-hydro-rostest, ros-hydro-tf, ros-hydro-tf2, ros-hydro-tf2-bullet, ros-hydro-tf2-geometry-msgs, ros-hydro-tf2-kdl, ros-hydro-tf2-msgs, ros-hydro-tf2-ros
+Description: tf2 unit tests
