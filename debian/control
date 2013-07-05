@@ -1,0 +1,12 @@
+Source: ros-hydro-tf2-bullet
+Section: misc
+Priority: extra
+Maintainer: "Tully Foote <tfoote@osrfoundation.org>"
+Build-Depends: debhelper (>= 7.0.50~), libbullet-dev, ros-hydro-catkin, ros-hydro-geometry-msgs, ros-hydro-tf2
+Homepage: http://www.ros.org/wiki/tf2_bullet
+Standards-Version: 3.9.2
+
+Package: ros-hydro-tf2-bullet
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends}, libbullet-dev, ros-hydro-geometry-msgs, ros-hydro-tf2
+Description: tf2_bullet
