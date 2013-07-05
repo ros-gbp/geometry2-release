@@ -31,51 +31,12 @@
 
 
 #include <tf2_bullet/tf2_bullet.h>
-#include <tf2_ros/transform_listener.h>
 #include <ros/ros.h>
 #include <gtest/gtest.h>
 #include <tf2/convert.h>
 
-tf2_ros::Buffer* tf_buffer;
 static const double EPS = 1e-3;
 
-TEST(TfBullet, Transform)
-{
-  tf2::Stamped<btTransform> v1(btTransform(btQuaternion(1,0,0,0), btVector3(1,2,3)), ros::Time(2.0), "A");
-
-  // simple api
-  btTransform v_simple = tf_buffer->transform(v1, "B", ros::Duration(2.0));
-  EXPECT_NEAR(v_simple.getOrigin().getX(), -9, EPS);
-  EXPECT_NEAR(v_simple.getOrigin().getY(), 18, EPS);
-  EXPECT_NEAR(v_simple.getOrigin().getZ(), 27, EPS);
-
-  // advanced api
-  btTransform v_advanced = tf_buffer->transform(v1, "B", ros::Time(2.0),
-					       "B", ros::Duration(3.0));
-  EXPECT_NEAR(v_advanced.getOrigin().getX(), -9, EPS);
-  EXPECT_NEAR(v_advanced.getOrigin().getY(), 18, EPS);
-  EXPECT_NEAR(v_advanced.getOrigin().getZ(), 27, EPS);
-}
-
-
-
-TEST(TfBullet, Vector)
-{
-  tf2::Stamped<btVector3>  v1(btVector3(1,2,3), ros::Time(2.0), "A");
-
-  // simple api
-  btVector3 v_simple = tf_buffer->transform(v1, "B", ros::Duration(2.0));
-  EXPECT_NEAR(v_simple.getX(), -9, EPS);
-  EXPECT_NEAR(v_simple.getY(), 18, EPS);
-  EXPECT_NEAR(v_simple.getZ(), 27, EPS);
-
-  // advanced api
-  btVector3 v_advanced = tf_buffer->transform(v1, "B", ros::Time(2.0),
-  					     "B", ros::Duration(3.0));
-  EXPECT_NEAR(v_advanced.getX(), -9, EPS);
-  EXPECT_NEAR(v_advanced.getY(), 18, EPS);
-  EXPECT_NEAR(v_advanced.getZ(), 27, EPS);
-}
 
 TEST(TfBullet, ConvertVector)
 {
@@ -97,23 +58,7 @@ TEST(TfBullet, ConvertVector)
 
 int main(int argc, char **argv){
   testing::InitGoogleTest(&argc, argv);
-  ros::init(argc, argv, "test");
-  ros::NodeHandle n;
-
-  tf_buffer = new tf2_ros::Buffer();
-
-  // populate buffer
-  geometry_msgs::TransformStamped t;
-  t.transform.translation.x = 10;
-  t.transform.translation.y = 20;
-  t.transform.translation.z = 30;
-  t.transform.rotation.x = 1;
-  t.header.stamp = ros::Time(2.0);
-  t.header.frame_id = "A";
-  t.child_frame_id = "B";
-  tf_buffer->setTransform(t, "test");
 
   bool ret = RUN_ALL_TESTS();
-  delete tf_buffer;
   return ret;
 }
