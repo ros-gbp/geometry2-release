@@ -55,7 +55,7 @@ namespace tf2_ros
      * @param debug Whether to advertise the view_frames service that exposes debugging information from the buffer
      * @return 
      */
-    Buffer(ros::Duration cache_time = ros::Duration(BufferCore::DEFAULT_CACHE_TIME), bool debug = true);
+    Buffer(ros::Duration cache_time = ros::Duration(BufferCore::DEFAULT_CACHE_TIME), bool debug = false);
 
     /** \brief Get the transform between two frames by frame ID.
      * \param target_frame The frame to which data should be transformed
@@ -116,16 +116,23 @@ namespace tf2_ros
 		   const std::string& source_frame, const ros::Time& source_time,
 		   const std::string& fixed_frame, const ros::Duration timeout, std::string* errstr = NULL) const;
 
+
+    
+    
   private:
-    bool getFrames(tf2_msgs::FrameGraph::Request& req, tf2_msgs::FrameGraph::Response& res) 
-    {
-      res.frame_yaml = allFramesAsYAML();
-      return true;
-    }
+    bool getFrames(tf2_msgs::FrameGraph::Request& req, tf2_msgs::FrameGraph::Response& res) ;
+
+
+    // conditionally error if dedicated_thread unset.
+    bool checkAndErrorDedicatedThreadPresent(std::string* errstr) const;
 
     ros::ServiceServer frames_server_;
 
+
   }; // class 
+
+static const std::string threading_error = "Do not call canTransform or lookupTransform with a timeout unless you are using another thread for populating data. Without a dedicated thread it will always timeout.  If you have a seperate thread servicing tf messages, call setUsingDedicatedThread(true) on your Buffer instance.";
+
   
 } // namespace
 
