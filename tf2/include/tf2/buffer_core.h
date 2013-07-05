@@ -34,6 +34,8 @@
 
 #include "transform_storage.h"
 
+#include <boost/signals.hpp>
+
 #include <string>
 
 #include "ros/duration.h"
@@ -228,8 +230,62 @@ public:
   /// \brief Internal use only
   void cancelTransformableRequest(TransformableRequestHandle handle);
 
-private:
 
+
+
+  // Tell the buffer that there are multiple threads serviciing it. 
+  // This is useful for derived classes to know if they can block or not. 
+  void setUsingDedicatedThread(bool value) { using_dedicated_thread_ = value;};
+  // Get the state of using_dedicated_thread_
+  bool isUsingDedicatedThread() const { return using_dedicated_thread_;};
+  
+
+
+
+  /* Backwards compatability section for tf::Transformer you should not use these
+   */
+
+  /**
+   * \brief Add a callback that happens when a new transform has arrived
+   *
+   * \param callback The callback, of the form void func();
+   * \return A boost::signals::connection object that can be used to remove this
+   * listener
+   */
+  boost::signals::connection _addTransformsChangedListener(boost::function<void(void)> callback);
+  void _removeTransformsChangedListener(boost::signals::connection c);
+
+
+  /**@brief Check if a frame exists in the tree
+   * @param frame_id_str The frame id in question  */
+  bool _frameExists(const std::string& frame_id_str) const;
+
+  /**@brief Fill the parent of a frame.
+   * @param frame_id The frame id of the frame in question
+   * @param parent The reference to the string to fill the parent
+   * Returns true unless "NO_PARENT" */
+  bool _getParent(const std::string& frame_id, ros::Time time, std::string& parent) const;
+
+  /** \brief A way to get a std::vector of available frame ids */
+  void _getFrameStrings(std::vector<std::string>& ids) const;
+
+
+  CompactFrameID _lookupFrameNumber(const std::string& frameid_str) const { 
+    return lookupFrameNumber(frameid_str); 
+  }
+  CompactFrameID _lookupOrInsertFrameNumber(const std::string& frameid_str) {
+    return lookupOrInsertFrameNumber(frameid_str); 
+  }
+
+  int _getLatestCommonTime(CompactFrameID target_frame, CompactFrameID source_frame, ros::Time& time, std::string* error_string) const {
+    return getLatestCommonTime(target_frame, source_frame, time, error_string);
+  }
+
+  CompactFrameID _validateFrameId(const char* function_name_arg, const std::string& frame_id) const {
+    return validateFrameId(function_name_arg, frame_id);
+  }
+
+private:
 
   /** \brief A way to see what frames have been cached
    * Useful for debugging. Use this call internally. 
@@ -284,6 +340,12 @@ private:
   struct RemoveRequestByCallback;
   struct RemoveRequestByID;
 
+  // Backwards compatability for tf message_filter
+  typedef boost::signal<void(void)> TransformsChangedSignal;
+  /// Signal which is fired whenever new transform data has arrived, from the thread the data arrived in
+  TransformsChangedSignal _transforms_changed_;
+
+
   /************************* Internal Functions ****************************/
 
   /** \brief An accessor to get a frame, which will throw an exception if the frame is no there.
@@ -324,10 +386,16 @@ private:
   bool canTransformNoLock(CompactFrameID target_id, CompactFrameID source_id,
                       const ros::Time& time, std::string* error_msg) const;
 
-  /////////////////////////////////// Backwards hack for quick startup /////////////////////////
-  //Using tf for now will be replaced fully
-  //  tf::Transformer old_tf_;
-};
+
+  //Whether it is safe to use canTransform with a timeout. (If another thread is not provided it will always timeout.)
+  bool using_dedicated_thread_;
   
-}
+
+};
+
+
+
+
+};
+
 #endif //TF2_CORE_H
