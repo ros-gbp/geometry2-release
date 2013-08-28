@@ -65,6 +65,23 @@ Buffer::lookupTransform(const std::string& target_frame, const ros::Time& target
   return lookupTransform(target_frame, target_time, source_frame, source_time, fixed_frame);
 }
 
+/** This is a workaround for the case that we're running inside of
+    rospy and ros::Time is not initialized inside the c++ instance. 
+    This makes the system fall back to Wall time if not initialized.  
+*/
+ros::Time now_fallback_to_wall()
+{
+  try
+  {
+    return ros::Time::now();
+  }
+  catch (ros::TimeNotInitializedException ex)
+  {
+    ros::WallTime wt = ros::WallTime::now(); 
+    return ros::Time(wt.sec, wt.nsec); 
+  }
+}
+
 
 bool
 Buffer::canTransform(const std::string& target_frame, const std::string& source_frame, 
@@ -74,9 +91,10 @@ Buffer::canTransform(const std::string& target_frame, const std::string& source_
     return false;
 
   // poll for transform if timeout is set
-  ros::Time start_time = ros::Time::now();
-  while (ros::Time::now() < start_time + timeout && 
-	 !canTransform(target_frame, source_frame, time))
+  ros::Time start_time = now_fallback_to_wall();
+  while (now_fallback_to_wall() < start_time + timeout && 
+	 !canTransform(target_frame, source_frame, time) &&
+         now_fallback_to_wall() > start_time) //don't wait if time jumped backwards
     ros::Duration(0.01).sleep();
   return canTransform(target_frame, source_frame, time, errstr);
 }
@@ -91,9 +109,10 @@ Buffer::canTransform(const std::string& target_frame, const ros::Time& target_ti
     return false;
 
   // poll for transform if timeout is set
-  ros::Time start_time = ros::Time::now();
-  while (ros::Time::now() < start_time + timeout && 
-	 !canTransform(target_frame, target_time, source_frame, source_time, fixed_frame))
+  ros::Time start_time = now_fallback_to_wall();
+  while (now_fallback_to_wall() < start_time + timeout && 
+	 !canTransform(target_frame, target_time, source_frame, source_time, fixed_frame) &&
+         now_fallback_to_wall() > start_time) //don't wait if time jumped backwards
     ros::Duration(0.01).sleep();
   return canTransform(target_frame, target_time, source_frame, source_time, fixed_frame, errstr);
 }
