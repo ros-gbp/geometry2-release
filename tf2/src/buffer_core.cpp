@@ -168,7 +168,7 @@ BufferCore::BufferCore(ros::Duration cache_time)
 , using_dedicated_thread_(false)
 {
   frameIDs_["NO_PARENT"] = 0;
-  frames_.push_back(TimeCacheInterfacePtr());// new TimeCache(interpolating, cache_time, max_extrapolation_distance));//unused but needed for iteration over all elements
+  frames_.push_back(TimeCacheInterfacePtr());
   frameIDs_reverse.push_back("NO_PARENT");
 }
 
@@ -187,7 +187,8 @@ void BufferCore::clear()
   {
     for (std::vector<TimeCacheInterfacePtr>::iterator  cache_it = frames_.begin() + 1; cache_it != frames_.end(); ++cache_it)
     {
-      (*cache_it)->clearList();
+      if (*cache_it)
+        (*cache_it)->clearList();
     }
   }
   
@@ -771,7 +772,7 @@ CompactFrameID BufferCore::lookupOrInsertFrameNumber(const std::string& frameid_
   if (map_it == frameIDs_.end())
   {
     retval = CompactFrameID(frames_.size());
-    frames_.push_back(TimeCacheInterfacePtr());//new TimeCache(cache_time_, max_extrapolation_distance_));
+    frames_.push_back(TimeCacheInterfacePtr());//Just a place holder for iteration
     frameIDs_[frameid_str] = retval;
     frameIDs_reverse.push_back(frameid_str);
   }
