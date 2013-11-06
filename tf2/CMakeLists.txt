@@ -9,7 +9,7 @@ catkin_python_setup()
 catkin_package(
    INCLUDE_DIRS include
    LIBRARIES tf2 
-   CATKIN_DEPENDS geometry_msgs tf2_msgs rospy roscpp)
+   CATKIN_DEPENDS geometry_msgs tf2_msgs roscpp)
 
 include_directories(include ${catkin_INCLUDE_DIRS})
 include_directories (src/bt) 
@@ -23,7 +23,7 @@ target_link_libraries(tf2 ${Boost_LIBRARIES} ${catkin_LIBRARIES})
 add_dependencies(tf2 tf2_msgs_gencpp)
 
 #BEGIN Python Libraries
-find_package(PythonLibs REQUIRED)
+find_package(PythonLibs 2 REQUIRED)
 include_directories(${PYTHON_INCLUDE_PATH})
 
 # Check for SSE
