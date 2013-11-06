@@ -1,0 +1,12 @@
+Source: ros-groovy-tf2-geometry-msgs
+Section: misc
+Priority: extra
+Maintainer: Tully Foote <tfoote@willowgarage.com>
+Build-Depends: debhelper (>= 7.0.50~), ros-groovy-catkin, ros-groovy-geometry-msgs, ros-groovy-orocos-kdl, ros-groovy-tf2, ros-groovy-tf2-ros
+Homepage: http://www.ros.org/wiki/tf2_ros
+Standards-Version: 3.9.2
+
+Package: ros-groovy-tf2-geometry-msgs
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends}, ros-groovy-geometry-msgs, ros-groovy-orocos-kdl, ros-groovy-tf2, ros-groovy-tf2-ros
+Description: tf2_geometry_msgs
