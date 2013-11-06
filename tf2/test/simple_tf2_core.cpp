@@ -31,7 +31,7 @@
 #include <tf2/buffer_core.h>
 #include <sys/time.h>
 #include <ros/ros.h>
-#include "tf2/LinearMath/Vector3.h"
+#include "tf2/LinearMath/btVector3.h"
 #include "tf2/exceptions.h"
 
 void seed_rand()
@@ -118,5 +118,6 @@ TEST(tf2_canTransform, One_Exists)
 int main(int argc, char **argv){
   testing::InitGoogleTest(&argc, argv);
   ros::Time::init(); //needed for ros::TIme::now()
+  ros::init(argc, argv, "tf_unittest");
   return RUN_ALL_TESTS();
 }

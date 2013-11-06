@@ -41,7 +41,7 @@
 #include <actionlib/client/simple_action_client.h>
 #include <tf2_msgs/LookupTransformAction.h>
 
-namespace tf2_ros
+namespace tf2
 {
   class BufferClient : public BufferInterface
   {

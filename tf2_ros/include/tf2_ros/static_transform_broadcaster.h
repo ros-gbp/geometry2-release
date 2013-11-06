@@ -39,7 +39,7 @@
 #include "geometry_msgs/TransformStamped.h"
 #include "tf2_msgs/TFMessage.h"
 
-namespace tf2_ros
+namespace tf2
 {
 
 

@@ -42,7 +42,7 @@
 #include <geometry_msgs/TransformStamped.h>
 #include <tf2_ros/buffer.h>
 
-namespace tf2_ros
+namespace tf2
 {
   class BufferServer
   {
@@ -58,7 +58,7 @@ namespace tf2_ros
 
     public:
       BufferServer(const Buffer& buffer, const std::string& ns,
-          bool auto_start = true, ros::Duration check_period = ros::Duration(0.01));
+          bool auto_start = false, ros::Duration check_period = ros::Duration(0.01));
 
       void start();
 

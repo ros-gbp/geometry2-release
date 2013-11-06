@@ -31,12 +31,12 @@
 
 
 #include <tf2_kdl/tf2_kdl.h>
+#include <ros/ros.h>
 #include <kdl/frames_io.hpp>
 #include <gtest/gtest.h>
-#include "tf2_ros/buffer.h"
 
 
-tf2_ros::Buffer* tf_buffer;
+tf2::Buffer* tf_buffer;
 static const double EPS = 1e-3;
 
 TEST(TfKDL, Frame)
@@ -111,8 +111,8 @@ int main(int argc, char **argv){
   testing::InitGoogleTest(&argc, argv);
   ros::init(argc, argv, "test");
   ros::NodeHandle n;
-
-  tf_buffer = new tf2_ros::Buffer();
+  
+  tf_buffer = new tf2::Buffer();
 
   // populate buffer
   geometry_msgs::TransformStamped t;

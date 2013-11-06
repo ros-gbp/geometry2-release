@@ -34,8 +34,6 @@
 
 #include "transform_storage.h"
 
-#include <boost/signals.hpp>
-
 #include <string>
 
 #include "ros/duration.h"
@@ -49,7 +47,6 @@
 #include <boost/unordered_map.hpp>
 #include <boost/thread/mutex.hpp>
 #include <boost/function.hpp>
-#include <boost/shared_ptr.hpp>
 
 namespace tf2
 {
@@ -59,7 +56,6 @@ typedef uint32_t TransformableCallbackHandle;
 typedef uint64_t TransformableRequestHandle;
 
 class TimeCacheInterface;
-typedef boost::shared_ptr<TimeCacheInterface> TimeCacheInterfacePtr;
 
 enum TransformableResult
 {
@@ -89,8 +85,9 @@ class BufferCore
 {
 public:
   /************* Constants ***********************/
-  static const int DEFAULT_CACHE_TIME = 10;  //!< The default amount of time to cache data in seconds
+  static const double DEFAULT_CACHE_TIME = 10.0;  //!< The default amount of time to cache data in seconds
   static const uint32_t MAX_GRAPH_DEPTH = 1000UL;  //!< The default amount of time to cache data in seconds
+  static const int64_t DEFAULT_MAX_EXTRAPOLATION_DISTANCE = 0ULL; //!< The default amount of time to extrapolate
 
   /** Constructor
    * \param interpolating Whether to interpolate, if this is false the closest value will be returned
@@ -231,76 +228,8 @@ public:
   /// \brief Internal use only
   void cancelTransformableRequest(TransformableRequestHandle handle);
 
-
-
-
-  // Tell the buffer that there are multiple threads serviciing it. 
-  // This is useful for derived classes to know if they can block or not. 
-  void setUsingDedicatedThread(bool value) { using_dedicated_thread_ = value;};
-  // Get the state of using_dedicated_thread_
-  bool isUsingDedicatedThread() const { return using_dedicated_thread_;};
-  
-
-
-
-  /* Backwards compatability section for tf::Transformer you should not use these
-   */
-
-  /**
-   * \brief Add a callback that happens when a new transform has arrived
-   *
-   * \param callback The callback, of the form void func();
-   * \return A boost::signals::connection object that can be used to remove this
-   * listener
-   */
-  boost::signals::connection _addTransformsChangedListener(boost::function<void(void)> callback);
-  void _removeTransformsChangedListener(boost::signals::connection c);
-
-
-  /**@brief Check if a frame exists in the tree
-   * @param frame_id_str The frame id in question  */
-  bool _frameExists(const std::string& frame_id_str) const;
-
-  /**@brief Fill the parent of a frame.
-   * @param frame_id The frame id of the frame in question
-   * @param parent The reference to the string to fill the parent
-   * Returns true unless "NO_PARENT" */
-  bool _getParent(const std::string& frame_id, ros::Time time, std::string& parent) const;
-
-  /** \brief A way to get a std::vector of available frame ids */
-  void _getFrameStrings(std::vector<std::string>& ids) const;
-
-
-  CompactFrameID _lookupFrameNumber(const std::string& frameid_str) const { 
-    return lookupFrameNumber(frameid_str); 
-  }
-  CompactFrameID _lookupOrInsertFrameNumber(const std::string& frameid_str) {
-    return lookupOrInsertFrameNumber(frameid_str); 
-  }
-
-  int _getLatestCommonTime(CompactFrameID target_frame, CompactFrameID source_frame, ros::Time& time, std::string* error_string) const {
-    boost::mutex::scoped_lock lock(frame_mutex_);
-    return getLatestCommonTime(target_frame, source_frame, time, error_string);
-  }
-
-  CompactFrameID _validateFrameId(const char* function_name_arg, const std::string& frame_id) const {
-    return validateFrameId(function_name_arg, frame_id);
-  }
-
-  /**@brief Get the duration over which this transformer will cache */
-  ros::Duration getCacheLength() { return cache_time_;}
-
-  /** \brief Backwards compatabilityA way to see what frames have been cached
-   * Useful for debugging
-   */
-  std::string _allFramesAsDot() const;
-
-  /** \brief Backwards compatabilityA way to see what frames are in a chain
-   * Useful for debugging
-   */
-  void _chainAsVector(const std::string & target_frame, ros::Time target_time, const std::string & source_frame, ros::Time source_time, const std::string & fixed_frame, std::vector<std::string>& output) const;
-
 private:
+
 
   /** \brief A way to see what frames have been cached
    * Useful for debugging. Use this call internally. 
@@ -312,7 +241,7 @@ private:
   
   /** \brief The pointers to potential frames that the tree can be made of.
    * The frames will be dynamically allocated at run time when set the first time. */
-  typedef std::vector<TimeCacheInterfacePtr> V_TimeCacheInterface;
+  typedef std::vector<TimeCacheInterface*> V_TimeCacheInterface;
   V_TimeCacheInterface frames_;
   
   /** \brief A mutex to protect testing and allocating new frames on the above vector. */
@@ -355,12 +284,6 @@ private:
   struct RemoveRequestByCallback;
   struct RemoveRequestByID;
 
-  // Backwards compatability for tf message_filter
-  typedef boost::signal<void(void)> TransformsChangedSignal;
-  /// Signal which is fired whenever new transform data has arrived, from the thread the data arrived in
-  TransformsChangedSignal _transforms_changed_;
-
-
   /************************* Internal Functions ****************************/
 
   /** \brief An accessor to get a frame, which will throw an exception if the frame is no there.
@@ -369,9 +292,9 @@ private:
    * This is an internal function which will get the pointer to the frame associated with the frame id
    * Possible Exception: tf::LookupException
    */
-  TimeCacheInterfacePtr getFrame(CompactFrameID c_frame_id) const;
+  TimeCacheInterface* getFrame(CompactFrameID c_frame_id) const;
 
-  TimeCacheInterfacePtr allocateFrame(CompactFrameID cfid, bool is_static);
+  TimeCacheInterface* allocateFrame(CompactFrameID cfid, bool is_static);
 
 
   bool warnFrameId(const char* function_name_arg, const std::string& frame_id) const;
@@ -401,16 +324,10 @@ private:
   bool canTransformNoLock(CompactFrameID target_id, CompactFrameID source_id,
                       const ros::Time& time, std::string* error_msg) const;
 
-
-  //Whether it is safe to use canTransform with a timeout. (If another thread is not provided it will always timeout.)
-  bool using_dedicated_thread_;
+  /////////////////////////////////// Backwards hack for quick startup /////////////////////////
+  //Using tf for now will be replaced fully
+  //  tf::Transformer old_tf_;
+};
   
-
-};
-
-
-
-
-};
-
+}
 #endif //TF2_CORE_H

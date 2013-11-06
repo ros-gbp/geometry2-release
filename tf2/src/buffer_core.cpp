@@ -34,39 +34,48 @@
 #include "tf2/exceptions.h"
 #include "tf2_msgs/TF2Error.h"
 
-#include <assert.h>
-#include <console_bridge/console.h>
-#include "tf2/LinearMath/Transform.h"
+#include <ros/assert.h>
+#include <ros/console.h>
+#include "tf2/LinearMath/btTransform.h"
+
+//legacy
+//#include "tf/tf.h"
+//#include "tf/transform_datatypes.h"
 
 namespace tf2
 {
 
+// Must provide storage for non-integral static const class members.
+// Otherwise you get undefined symbol errors on OS X (why not on Linux?).
+// Thanks to Rob for pointing out the right way to do this.
+const double tf2::BufferCore::DEFAULT_CACHE_TIME;
+
 /** \brief convert Transform msg to Transform */
-void transformMsgToTF2(const geometry_msgs::Transform& msg, tf2::Transform& tf2)
-{tf2 = tf2::Transform(tf2::Quaternion(msg.rotation.x, msg.rotation.y, msg.rotation.z, msg.rotation.w), tf2::Vector3(msg.translation.x, msg.translation.y, msg.translation.z));}
+void transformMsgToTF2(const geometry_msgs::Transform& msg, btTransform& bt)
+{bt = btTransform(btQuaternion(msg.rotation.x, msg.rotation.y, msg.rotation.z, msg.rotation.w), btVector3(msg.translation.x, msg.translation.y, msg.translation.z));}
 
 /** \brief convert Transform to Transform msg*/
-void transformTF2ToMsg(const tf2::Transform& tf2, geometry_msgs::Transform& msg)
+void transformTF2ToMsg(const btTransform& bt, geometry_msgs::Transform& msg)
 {
-  msg.translation.x = tf2.getOrigin().x();
-  msg.translation.y = tf2.getOrigin().y();
-  msg.translation.z = tf2.getOrigin().z();
-  msg.rotation.x = tf2.getRotation().x();
-  msg.rotation.y = tf2.getRotation().y();
-  msg.rotation.z = tf2.getRotation().z();
-  msg.rotation.w = tf2.getRotation().w();
+  msg.translation.x = bt.getOrigin().x();
+  msg.translation.y = bt.getOrigin().y();
+  msg.translation.z = bt.getOrigin().z();
+  msg.rotation.x = bt.getRotation().x();
+  msg.rotation.y = bt.getRotation().y();
+  msg.rotation.z = bt.getRotation().z();
+  msg.rotation.w = bt.getRotation().w();
 }
 
 /** \brief convert Transform to Transform msg*/
-void transformTF2ToMsg(const tf2::Transform& tf2, geometry_msgs::TransformStamped& msg, ros::Time stamp, const std::string& frame_id, const std::string& child_frame_id)
+void transformTF2ToMsg(const btTransform& bt, geometry_msgs::TransformStamped& msg, ros::Time stamp, const std::string& frame_id, const std::string& child_frame_id)
 {
-  transformTF2ToMsg(tf2, msg.transform);
+  transformTF2ToMsg(bt, msg.transform);
   msg.header.stamp = stamp;
   msg.header.frame_id = frame_id;
   msg.child_frame_id = child_frame_id;
 }
 
-void transformTF2ToMsg(const tf2::Quaternion& orient, const tf2::Vector3& pos, geometry_msgs::Transform& msg)
+void transformTF2ToMsg(const btQuaternion& orient, const btVector3& pos, geometry_msgs::Transform& msg)
 {
   msg.translation.x = pos.x();
   msg.translation.y = pos.y();
@@ -77,7 +86,7 @@ void transformTF2ToMsg(const tf2::Quaternion& orient, const tf2::Vector3& pos, g
   msg.rotation.w = orient.w();
 }
 
-void transformTF2ToMsg(const tf2::Quaternion& orient, const tf2::Vector3& pos, geometry_msgs::TransformStamped& msg, ros::Time stamp, const std::string& frame_id, const std::string& child_frame_id)
+void transformTF2ToMsg(const btQuaternion& orient, const btVector3& pos, geometry_msgs::TransformStamped& msg, ros::Time stamp, const std::string& frame_id, const std::string& child_frame_id)
 {
   transformTF2ToMsg(orient, pos, msg.transform);
   msg.header.stamp = stamp;
@@ -119,7 +128,7 @@ bool BufferCore::warnFrameId(const char* function_name_arg, const std::string& f
   {
     std::stringstream ss;
     ss << "Invalid argument passed to "<< function_name_arg <<" in tf2 frame_ids cannot be empty";
-    logWarn("%s",ss.str().c_str());
+    ROS_WARN("%s",ss.str().c_str());
     return true;
   }
 
@@ -127,7 +136,7 @@ bool BufferCore::warnFrameId(const char* function_name_arg, const std::string& f
   {
     std::stringstream ss;
     ss << "Invalid argument \"" << frame_id << "\" passed to "<< function_name_arg <<" in tf2 frame_ids cannot start with a '/' like: ";
-    logWarn("%s",ss.str().c_str());
+    ROS_WARN("%s",ss.str().c_str());
     return true;
   }
 
@@ -165,10 +174,9 @@ BufferCore::BufferCore(ros::Duration cache_time)
 : cache_time_(cache_time)
 , transformable_callbacks_counter_(0)
 , transformable_requests_counter_(0)
-, using_dedicated_thread_(false)
 {
   frameIDs_["NO_PARENT"] = 0;
-  frames_.push_back(TimeCacheInterfacePtr());
+  frames_.push_back(NULL);// new TimeCache(interpolating, cache_time, max_extrapolation_distance));//unused but needed for iteration over all elements
   frameIDs_reverse.push_back("NO_PARENT");
 }
 
@@ -185,10 +193,9 @@ void BufferCore::clear()
   boost::mutex::scoped_lock lock(frame_mutex_);
   if ( frames_.size() > 1 )
   {
-    for (std::vector<TimeCacheInterfacePtr>::iterator  cache_it = frames_.begin() + 1; cache_it != frames_.end(); ++cache_it)
+    for (std::vector< TimeCacheInterface*>::iterator  cache_it = frames_.begin() + 1; cache_it != frames_.end(); ++cache_it)
     {
-      if (*cache_it)
-        (*cache_it)->clearList();
+      (*cache_it)->clearList();
     }
   }
   
@@ -214,26 +221,26 @@ bool BufferCore::setTransform(const geometry_msgs::TransformStamped& transform_i
   bool error_exists = false;
   if (stripped.child_frame_id == stripped.header.frame_id)
   {
-    logError("TF_SELF_TRANSFORM: Ignoring transform from authority \"%s\" with frame_id and child_frame_id  \"%s\" because they are the same",  authority.c_str(), stripped.child_frame_id.c_str());
+    ROS_ERROR("TF_SELF_TRANSFORM: Ignoring transform from authority \"%s\" with frame_id and child_frame_id  \"%s\" because they are the same",  authority.c_str(), stripped.child_frame_id.c_str());
     error_exists = true;
   }
 
   if (stripped.child_frame_id == "")
   {
-    logError("TF_NO_CHILD_FRAME_ID: Ignoring transform from authority \"%s\" because child_frame_id not set ", authority.c_str());
+    ROS_ERROR("TF_NO_CHILD_FRAME_ID: Ignoring transform from authority \"%s\" because child_frame_id not set ", authority.c_str());
     error_exists = true;
   }
 
   if (stripped.header.frame_id == "")
   {
-    logError("TF_NO_FRAME_ID: Ignoring transform with child_frame_id \"%s\"  from authority \"%s\" because frame_id not set", stripped.child_frame_id.c_str(), authority.c_str());
+    ROS_ERROR("TF_NO_FRAME_ID: Ignoring transform with child_frame_id \"%s\"  from authority \"%s\" because frame_id not set", stripped.child_frame_id.c_str(), authority.c_str());
     error_exists = true;
   }
 
   if (std::isnan(stripped.transform.translation.x) || std::isnan(stripped.transform.translation.y) || std::isnan(stripped.transform.translation.z)||
       std::isnan(stripped.transform.rotation.x) ||       std::isnan(stripped.transform.rotation.y) ||       std::isnan(stripped.transform.rotation.z) ||       std::isnan(stripped.transform.rotation.w))
   {
-    logError("TF_NAN_INPUT: Ignoring transform for child_frame_id \"%s\" from authority \"%s\" because of a nan value in the transform (%f %f %f) (%f %f %f %f)",
+    ROS_ERROR("TF_NAN_INPUT: Ignoring transform for child_frame_id \"%s\" from authority \"%s\" because of a nan value in the transform (%f %f %f) (%f %f %f %f)",
               stripped.child_frame_id.c_str(), authority.c_str(),
               stripped.transform.translation.x, stripped.transform.translation.y, stripped.transform.translation.z,
               stripped.transform.rotation.x, stripped.transform.rotation.y, stripped.transform.rotation.z, stripped.transform.rotation.w
@@ -247,7 +254,7 @@ bool BufferCore::setTransform(const geometry_msgs::TransformStamped& transform_i
   {
     boost::mutex::scoped_lock lock(frame_mutex_);
     CompactFrameID frame_number = lookupOrInsertFrameNumber(stripped.child_frame_id);
-    TimeCacheInterfacePtr frame = getFrame(frame_number);
+    TimeCacheInterface* frame = getFrame(frame_number);
     if (frame == NULL)
       frame = allocateFrame(frame_number, is_static);
 
@@ -257,7 +264,7 @@ bool BufferCore::setTransform(const geometry_msgs::TransformStamped& transform_i
     }
     else
     {
-      logWarn("TF_OLD_DATA ignoring data from the past for frame %s at time %g according to authority %s\nPossible reasons are listed at ", stripped.child_frame_id.c_str(), stripped.header.stamp.toSec(), authority.c_str());
+      ROS_WARN("TF_OLD_DATA ignoring data from the past for frame %s at time %g according to authority %s\nPossible reasons are listed at ", stripped.child_frame_id.c_str(), stripped.header.stamp.toSec(), authority.c_str());
       return false;
     }
   }
@@ -267,14 +274,15 @@ bool BufferCore::setTransform(const geometry_msgs::TransformStamped& transform_i
   return true;
 }
 
-TimeCacheInterfacePtr BufferCore::allocateFrame(CompactFrameID cfid, bool is_static)
+TimeCacheInterface* BufferCore::allocateFrame(CompactFrameID cfid, bool is_static)
 {
-  TimeCacheInterfacePtr frame_ptr = frames_[cfid];
-  if (is_static) {
-    frames_[cfid] = TimeCacheInterfacePtr(new StaticCache());
-  } else {
-    frames_[cfid] = TimeCacheInterfacePtr(new TimeCache(cache_time_));
-  }
+  TimeCacheInterface* frame_ptr = frames_[cfid];
+  if ( frame_ptr != NULL)
+    delete frame_ptr;
+  if (is_static)
+    frames_[cfid] = new StaticCache();
+  else
+    frames_[cfid] = new TimeCache(cache_time_);
   
   return frames_[cfid];
 }
@@ -311,13 +319,9 @@ int BufferCore::walkToTopParent(F& f, ros::Time time, CompactFrameID target_id, 
   CompactFrameID frame = source_id;
   CompactFrameID top_parent = frame;
   uint32_t depth = 0;
-
-  std::string extrapolation_error_string;
-  bool extrapolation_might_have_occurred = false;
-
   while (frame != 0)
   {
-    TimeCacheInterfacePtr cache = getFrame(frame);
+    TimeCacheInterface* cache = getFrame(frame);
 
     if (!cache)
     {
@@ -326,12 +330,11 @@ int BufferCore::walkToTopParent(F& f, ros::Time time, CompactFrameID target_id, 
       break;
     }
 
-    CompactFrameID parent = f.gather(cache, time, &extrapolation_error_string);
+    CompactFrameID parent = f.gather(cache, time, 0);
     if (parent == 0)
     {
       // Just break out here... there may still be a path from source -> target
       top_parent = frame;
-      extrapolation_might_have_occurred = true;
       break;
     }
 
@@ -354,7 +357,7 @@ int BufferCore::walkToTopParent(F& f, ros::Time time, CompactFrameID target_id, 
       {
         std::stringstream ss;
         ss << "The tf tree is invalid because it contains a loop." << std::endl
-           << allFramesAsStringNoLock() << std::endl;
+           << allFramesAsString() << std::endl;
         *error_string = ss.str();
       }
       return tf2_msgs::TF2Error::LOOKUP_ERROR;
@@ -366,7 +369,7 @@ int BufferCore::walkToTopParent(F& f, ros::Time time, CompactFrameID target_id, 
   depth = 0;
   while (frame != top_parent)
   {
-    TimeCacheInterfacePtr cache = getFrame(frame);
+    TimeCacheInterface* cache = getFrame(frame);
 
     if (!cache)
     {
@@ -404,7 +407,7 @@ int BufferCore::walkToTopParent(F& f, ros::Time time, CompactFrameID target_id, 
       {
         std::stringstream ss;
         ss << "The tf tree is invalid because it contains a loop." << std::endl
-           << allFramesAsStringNoLock() << std::endl;
+           << allFramesAsString() << std::endl;
         *error_string = ss.str();
       }
       return tf2_msgs::TF2Error::LOOKUP_ERROR;
@@ -413,19 +416,6 @@ int BufferCore::walkToTopParent(F& f, ros::Time time, CompactFrameID target_id, 
 
   if (frame != top_parent)
   {
-    if (extrapolation_might_have_occurred)
-    {
-      if (error_string)
-      {
-        std::stringstream ss;
-        ss << extrapolation_error_string << ", when looking up transform from frame [" << lookupFrameString(source_id) << "] to frame [" << lookupFrameString(target_id) << "]";
-        *error_string = ss.str();
-      }
-
-      return tf2_msgs::TF2Error::EXTRAPOLATION_ERROR;
-      
-    }
-
     createConnectivityErrorString(source_id, target_id, error_string);
     return tf2_msgs::TF2Error::CONNECTIVITY_ERROR;
   }
@@ -447,7 +437,7 @@ struct TransformAccum
   {
   }
 
-  CompactFrameID gather(TimeCacheInterfacePtr cache, ros::Time time, std::string* error_string)
+  CompactFrameID gather(TimeCacheInterface* cache, ros::Time time, std::string* error_string)
   {
     if (!cache->getData(time, st, error_string))
     {
@@ -483,16 +473,16 @@ struct TransformAccum
       break;
     case SourceParentOfTarget:
       {
-        tf2::Quaternion inv_target_quat = target_to_top_quat.inverse();
-        tf2::Vector3 inv_target_vec = quatRotate(inv_target_quat, -target_to_top_vec);
+        btQuaternion inv_target_quat = target_to_top_quat.inverse();
+        btVector3 inv_target_vec = quatRotate(inv_target_quat, -target_to_top_vec);
         result_vec = inv_target_vec;
         result_quat = inv_target_quat;
         break;
       }
     case FullPath:
       {
-        tf2::Quaternion inv_target_quat = target_to_top_quat.inverse();
-        tf2::Vector3 inv_target_vec = quatRotate(inv_target_quat, -target_to_top_vec);
+        btQuaternion inv_target_quat = target_to_top_quat.inverse();
+        btVector3 inv_target_vec = quatRotate(inv_target_quat, -target_to_top_vec);
 
      	result_vec = quatRotate(inv_target_quat, source_to_top_vec) + inv_target_vec;
         result_quat = inv_target_quat * source_to_top_quat;
@@ -505,13 +495,13 @@ struct TransformAccum
 
   TransformStorage st;
   ros::Time time;
-  tf2::Quaternion source_to_top_quat;
-  tf2::Vector3 source_to_top_vec;
-  tf2::Quaternion target_to_top_quat;
-  tf2::Vector3 target_to_top_vec;
+  btQuaternion source_to_top_quat;
+  btVector3 source_to_top_vec;
+  btQuaternion target_to_top_quat;
+  btVector3 target_to_top_vec;
 
-  tf2::Quaternion result_quat;
-  tf2::Vector3 result_vec;
+  btQuaternion result_quat;
+  btVector3 result_vec;
 };
 
 geometry_msgs::TransformStamped BufferCore::lookupTransform(const std::string& target_frame,
@@ -523,25 +513,12 @@ geometry_msgs::TransformStamped BufferCore::lookupTransform(const std::string& t
   if (target_frame == source_frame) {
     geometry_msgs::TransformStamped identity;
     identity.header.frame_id = target_frame;
+    identity.header.stamp = time;
     identity.child_frame_id = source_frame;
     identity.transform.rotation.w = 1;
-
-    if (time == ros::Time())
-    {
-      CompactFrameID target_id = lookupFrameNumber(target_frame);
-      TimeCacheInterfacePtr cache = getFrame(target_id);
-      if (cache)
-        identity.header.stamp = cache->getLatestTimestamp();
-      else
-        identity.header.stamp = time;
-    }
-    else
-      identity.header.stamp = time;
-
     return identity;
   }
 
-  //Identify case does not need to be validated above
   CompactFrameID target_id = validateFrameId("lookupTransform argument target_frame", target_frame);
   CompactFrameID source_id = validateFrameId("lookupTransform argument source_frame", source_frame);
 
@@ -559,8 +536,8 @@ geometry_msgs::TransformStamped BufferCore::lookupTransform(const std::string& t
     case tf2_msgs::TF2Error::LOOKUP_ERROR:
       throw LookupException(error_string);
     default:
-      logError("Unknown error code: %d", retval);
-      assert(0);
+      ROS_ERROR("Unknown error code: %d", retval);
+      ROS_BREAK();
     }
   }
 
@@ -584,10 +561,10 @@ geometry_msgs::TransformStamped BufferCore::lookupTransform(const std::string& t
   geometry_msgs::TransformStamped temp1 =  lookupTransform(fixed_frame, source_frame, source_time);
   geometry_msgs::TransformStamped temp2 =  lookupTransform(target_frame, fixed_frame, target_time);
   
-  tf2::Transform tf1, tf2;
-  transformMsgToTF2(temp1.transform, tf1);
-  transformMsgToTF2(temp2.transform, tf2);
-  transformTF2ToMsg(tf2*tf1, output.transform);
+  btTransform bt1, bt2;
+  transformMsgToTF2(temp1.transform, bt1);
+  transformMsgToTF2(temp2.transform, bt2);
+  transformTF2ToMsg(bt2*bt1, output.transform);
   output.header.stamp = temp2.header.stamp;
   output.header.frame_id = target_frame;
   output.child_frame_id = source_frame;
@@ -662,7 +639,7 @@ geometry_msgs::Twist BufferCore::lookupTwist(const std::string& tracking_frame,
 
 struct CanTransformAccum
 {
-  CompactFrameID gather(TimeCacheInterfacePtr cache, ros::Time time, std::string* error_string)
+  CompactFrameID gather(TimeCacheInterface* cache, ros::Time time, std::string* error_string)
   {
     return cache->getParent(time, error_string);
   }
@@ -710,10 +687,6 @@ bool BufferCore::canTransformInternal(CompactFrameID target_id, CompactFrameID s
 bool BufferCore::canTransform(const std::string& target_frame, const std::string& source_frame,
                            const ros::Time& time, std::string* error_msg) const
 {
-  // Short circuit if target_frame == source_frame
-  if (target_frame == source_frame)
-    return true;
-
   if (warnFrameId("canTransform argument target_frame", target_frame))
     return false;
   if (warnFrameId("canTransform argument source_frame", source_frame))
@@ -742,10 +715,10 @@ bool BufferCore::canTransform(const std::string& target_frame, const ros::Time& 
 }
 
 
-tf2::TimeCacheInterfacePtr BufferCore::getFrame(CompactFrameID frame_id) const
+tf2::TimeCacheInterface* BufferCore::getFrame(CompactFrameID frame_id) const
 {
   if (frame_id == 0 || frame_id > frames_.size()) /// @todo check larger values too
-    return TimeCacheInterfacePtr();
+    return NULL;
   else
   {
     return frames_[frame_id];
@@ -772,7 +745,7 @@ CompactFrameID BufferCore::lookupOrInsertFrameNumber(const std::string& frameid_
   if (map_it == frameIDs_.end())
   {
     retval = CompactFrameID(frames_.size());
-    frames_.push_back(TimeCacheInterfacePtr());//Just a place holder for iteration
+    frames_.push_back( NULL);//new TimeCache(cache_time_, max_extrapolation_distance_));
     frameIDs_[frameid_str] = retval;
     frameIDs_reverse.push_back(frameid_str);
   }
@@ -822,7 +795,7 @@ std::string BufferCore::allFramesAsStringNoLock() const
   ///regular transforms
   for (unsigned int counter = 1; counter < frames_.size(); counter ++)
   {
-    TimeCacheInterfacePtr frame_ptr = getFrame(CompactFrameID(counter));
+    TimeCacheInterface* frame_ptr = getFrame(CompactFrameID(counter));
     if (frame_ptr == NULL)
       continue;
     CompactFrameID frame_id_num;
@@ -856,12 +829,8 @@ int BufferCore::getLatestCommonTime(CompactFrameID target_id, CompactFrameID sou
 {
   if (source_id == target_id)
   {
-    TimeCacheInterfacePtr cache = getFrame(source_id);
     //Set time to latest timestamp of frameid in case of target and source frame id are the same
-    if (cache)
-      time = cache->getLatestTimestamp();
-    else
-      time = ros::Time();
+    time = ros::Time();                 ///\todo review was now();
     return tf2_msgs::TF2Error::NO_ERROR;
   }
 
@@ -875,7 +844,7 @@ int BufferCore::getLatestCommonTime(CompactFrameID target_id, CompactFrameID sou
   ros::Time common_time = ros::TIME_MAX;
   while (frame != 0)
   {
-    TimeCacheInterfacePtr cache = getFrame(frame);
+    TimeCacheInterface* cache = getFrame(frame);
 
     if (!cache)
     {
@@ -918,7 +887,7 @@ int BufferCore::getLatestCommonTime(CompactFrameID target_id, CompactFrameID sou
       {
         std::stringstream ss;
         ss<<"The tf tree is invalid because it contains a loop." << std::endl
-          << allFramesAsStringNoLock() << std::endl;
+          << allFramesAsString() << std::endl;
         *error_string = ss.str();
       }
       return tf2_msgs::TF2Error::LOOKUP_ERROR;
@@ -932,7 +901,7 @@ int BufferCore::getLatestCommonTime(CompactFrameID target_id, CompactFrameID sou
   CompactFrameID common_parent = 0;
   while (true)
   {
-    TimeCacheInterfacePtr cache = getFrame(frame);
+    TimeCacheInterface* cache = getFrame(frame);
 
     if (!cache)
     {
@@ -978,7 +947,7 @@ int BufferCore::getLatestCommonTime(CompactFrameID target_id, CompactFrameID sou
       {
         std::stringstream ss;
         ss<<"The tf tree is invalid because it contains a loop." << std::endl
-          << allFramesAsStringNoLock() << std::endl;
+          << allFramesAsString() << std::endl;
         *error_string = ss.str();
       }
       return tf2_msgs::TF2Error::LOOKUP_ERROR;
@@ -1030,13 +999,13 @@ std::string BufferCore::allFramesAsYAML() const
 
   mstream.precision(3);
   mstream.setf(std::ios::fixed,std::ios::floatfield);
-
+    
    //  for (std::vector< TimeCache*>::iterator  it = frames_.begin(); it != frames_.end(); ++it)
   for (unsigned int counter = 1; counter < frames_.size(); counter ++)//one referenced for 0 is no frame
   {
     CompactFrameID cfid = CompactFrameID(counter);
     CompactFrameID frame_id_num;
-    TimeCacheInterfacePtr cache = getFrame(cfid);
+    TimeCacheInterface* cache = getFrame(cfid);
     if (!cache)
     {
       continue;
@@ -1051,12 +1020,11 @@ std::string BufferCore::allFramesAsYAML() const
 
     std::string authority = "no recorded authority";
     std::map<CompactFrameID, std::string>::const_iterator it = frame_authority_.find(cfid);
-    if (it != frame_authority_.end()) {
+    if (it != frame_authority_.end())
       authority = it->second;
-    }
 
-    double rate = cache->getListLength() / std::max((cache->getLatestTimestamp().toSec() -
-                                                     cache->getOldestTimestamp().toSec() ), 0.0001);
+    double rate = getFrame(cfid)->getListLength() / std::max((getFrame(cfid)->getLatestTimestamp().toSec() -
+                                                                 getFrame(cfid)->getOldestTimestamp().toSec() ), 0.0001);
 
     mstream << std::fixed; //fixed point notation
     mstream.precision(3); //3 decimal places
@@ -1064,11 +1032,11 @@ std::string BufferCore::allFramesAsYAML() const
     mstream << "  parent: '" << frameIDs_reverse[frame_id_num] << "'" << std::endl;
     mstream << "  broadcaster: '" << authority << "'" << std::endl;
     mstream << "  rate: " << rate << std::endl;
-    mstream << "  most_recent_transform: " << (cache->getLatestTimestamp()).toSec() << std::endl;
-    mstream << "  oldest_transform: " << (cache->getOldestTimestamp()).toSec() << std::endl;
-    mstream << "  buffer_length: " << (cache->getLatestTimestamp() - cache->getOldestTimestamp()).toSec() << std::endl;
+    mstream << "  most_recent_transform: " << (getFrame(cfid)->getLatestTimestamp()).toSec() << std::endl;
+    mstream << "  oldest_transform: " << (getFrame(cfid)->getOldestTimestamp()).toSec() << std::endl;
+    mstream << "  buffer_length: " << (getFrame(cfid)->getLatestTimestamp()-getFrame(cfid)->getOldestTimestamp()).toSec() << std::endl;
   }
-
+  
   return mstream.str();
 }
 
@@ -1192,65 +1160,6 @@ void BufferCore::cancelTransformableRequest(TransformableRequestHandle handle)
   }
 }
 
-
-
-// backwards compability for tf methods
-boost::signals::connection BufferCore::_addTransformsChangedListener(boost::function<void(void)> callback)
-{
-  boost::mutex::scoped_lock lock(transformable_requests_mutex_);
-  return _transforms_changed_.connect(callback);
-}
-
-void BufferCore::_removeTransformsChangedListener(boost::signals::connection c)
-{
-  boost::mutex::scoped_lock lock(transformable_requests_mutex_);
-  c.disconnect();
-}
-
-
-bool BufferCore::_frameExists(const std::string& frame_id_str) const
-{
-  boost::mutex::scoped_lock lock(frame_mutex_);
-  return frameIDs_.count(frame_id_str);
-}
-
-bool BufferCore::_getParent(const std::string& frame_id, ros::Time time, std::string& parent) const
-{
-
-  boost::mutex::scoped_lock lock(frame_mutex_);
-  CompactFrameID frame_number = lookupFrameNumber(frame_id);
-  TimeCacheInterfacePtr frame = getFrame(frame_number);
-
-  if (! frame)
-    return false;
-      
-  CompactFrameID parent_id = frame->getParent(time, NULL);
-  if (parent_id == 0)
-    return false;
-
-  parent = lookupFrameString(parent_id);
-  return true;
-};
-
-void BufferCore::_getFrameStrings(std::vector<std::string> & vec) const
-{
-  vec.clear();
-
-  boost::mutex::scoped_lock lock(frame_mutex_);
-
-  TransformStorage temp;
-
-  //  for (std::vector< TimeCache*>::iterator  it = frames_.begin(); it != frames_.end(); ++it)
-  for (unsigned int counter = 1; counter < frameIDs_reverse.size(); counter ++)
-  {
-    vec.push_back(frameIDs_reverse[counter]);
-  }
-  return;
-}
-
-
-
-
 void BufferCore::testTransformableRequests()
 {
   boost::mutex::scoped_lock lock(transformable_requests_mutex_);
@@ -1311,115 +1220,6 @@ void BufferCore::testTransformableRequests()
       ++it;
     }
   }
-
-  // Backwards compatability callback for tf
-  _transforms_changed_();
 }
-
-
-std::string BufferCore::_allFramesAsDot() const
-{
-  std::stringstream mstream;
-  mstream << "digraph G {" << std::endl;
-  boost::mutex::scoped_lock lock(frame_mutex_);
-
-  TransformStorage temp;
-
-  if (frames_.size() == 1) {
-    mstream <<"\"no tf data recieved\"";
-  }
-
-  mstream.precision(3);
-  mstream.setf(std::ios::fixed,std::ios::floatfield);
-
-  for (unsigned int counter = 1; counter < frames_.size(); counter ++) // one referenced for 0 is no frame
-  {
-    unsigned int frame_id_num;
-    TimeCacheInterfacePtr counter_frame = getFrame(counter);
-    if (!counter_frame) {
-      continue;
-    }
-    if(!counter_frame->getData(ros::Time(), temp)) {
-      continue;
-    } else {
-      frame_id_num = temp.frame_id_;
-    }
-    std::string authority = "no recorded authority";
-    std::map<unsigned int, std::string>::const_iterator it = frame_authority_.find(counter);
-    if (it != frame_authority_.end())
-      authority = it->second;
-
-    double rate = counter_frame->getListLength() / std::max((counter_frame->getLatestTimestamp().toSec() -
-                                                             counter_frame->getOldestTimestamp().toSec()), 0.0001);
-
-    mstream << std::fixed; //fixed point notation
-    mstream.precision(3); //3 decimal places
-    mstream << "\"" << frameIDs_reverse[frame_id_num] << "\"" << " -> "
-            << "\"" << frameIDs_reverse[counter] << "\"" << "[label=\""
-      //<< "Time: " << current_time.toSec() << "\\n"
-            << "Broadcaster: " << authority << "\\n"
-            << "Average rate: " << rate << " Hz\\n"
-            << "Most recent transform: " << (counter_frame->getLatestTimestamp()).toSec() <<" \\n"
-      //    << "(time: " << getFrame(counter)->getLatestTimestamp().toSec() << ")\\n"
-      //    << "Oldest transform: " << (current_time - getFrame(counter)->getOldestTimestamp()).toSec() << " sec old \\n"
-      //    << "(time: " << (getFrame(counter)->getOldestTimestamp()).toSec() << ")\\n"
-            << "Buffer length: " << (counter_frame->getLatestTimestamp()-counter_frame->getOldestTimestamp()).toSec() << " sec\\n"
-            <<"\"];" <<std::endl;
-  }
-
-  for (unsigned int counter = 1; counter < frames_.size(); counter ++)//one referenced for 0 is no frame
-  {
-    unsigned int frame_id_num;
-    TimeCacheInterfacePtr counter_frame = getFrame(counter);
-    if (!counter_frame) {
-      continue;
-    }
-    if (counter_frame->getData(ros::Time(), temp)) {
-      frame_id_num = temp.frame_id_;
-    } else {
-    	frame_id_num = 0;
-    }
-
-    if(frameIDs_reverse[frame_id_num]=="NO_PARENT")
-    {
-      mstream << "edge [style=invis];" <<std::endl;
-      mstream << " subgraph cluster_legend { style=bold; color=black; label =\"view_frames Result\";\n"
-        //<< "\"Recorded at time: " << current_time.toSec() << "\"[ shape=plaintext ] ;\n "
-	      << "}" << "->" << "\"" << frameIDs_reverse[counter] << "\";" << std::endl;
-    }
-  }
-  mstream << "}";
-  return mstream.str();
-}
-
-
-void BufferCore::_chainAsVector(const std::string & target_frame, ros::Time target_time, const std::string & source_frame, ros::Time source_time, const std::string& fixed_frame, std::vector<std::string>& output) const
-{
-  std::string error_string;
-
-  output.clear(); //empty vector
-
-  std::stringstream mstream;
-  boost::mutex::scoped_lock lock(frame_mutex_);
-
-  TransformStorage temp;
-
-  ///regular transforms
-  for (unsigned int counter = 1; counter < frames_.size(); counter ++)
-  {
-    TimeCacheInterfacePtr frame_ptr = getFrame(CompactFrameID(counter));
-    if (frame_ptr == NULL)
-      continue;
-    CompactFrameID frame_id_num;
-    if (frame_ptr->getData(ros::Time(), temp))
-        frame_id_num = temp.frame_id_;
-      else
-      {
-        frame_id_num = 0;
-      }
-      output.push_back(frameIDs_reverse[frame_id_num]);
-  }
-}
-
 
 } // namespace tf2

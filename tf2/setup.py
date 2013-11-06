@@ -4,9 +4,9 @@ from distutils.core import setup
 from catkin_pkg.python_setup import generate_distutils_setup
 
 d = generate_distutils_setup(
-    packages=['tf2_py'],
+    packages=['tf2'],
     package_dir={'': 'src'},
-    requires=['rospy', 'geometry_msgs', 'tf2_msgs']
+    requires=['rospy', 'geometry_msgs', 'tf2_msgs', 'rosconsole']
 )
 
 setup(**d)
