@@ -32,10 +32,13 @@
 
 #include "tf2_ros/buffer.h"
 
-namespace tf2
+#include <ros/assert.h>
+
+namespace tf2_ros
 {
 
-Buffer::Buffer(ros::Duration cache_time, bool debug) : BufferCore(cache_time)
+Buffer::Buffer(ros::Duration cache_time, bool debug) :
+  BufferCore(cache_time)
 {
   if(debug && !ros::service::exists("~tf2_frames", false))
   {
@@ -62,16 +65,54 @@ Buffer::lookupTransform(const std::string& target_frame, const ros::Time& target
   return lookupTransform(target_frame, target_time, source_frame, source_time, fixed_frame);
 }
 
+/** This is a workaround for the case that we're running inside of
+    rospy and ros::Time is not initialized inside the c++ instance. 
+    This makes the system fall back to Wall time if not initialized.  
+*/
+ros::Time now_fallback_to_wall()
+{
+  try
+  {
+    return ros::Time::now();
+  }
+  catch (ros::TimeNotInitializedException ex)
+  {
+    ros::WallTime wt = ros::WallTime::now(); 
+    return ros::Time(wt.sec, wt.nsec); 
+  }
+}
+
+/** This is a workaround for the case that we're running inside of
+    rospy and ros::Time is not initialized inside the c++ instance. 
+    This makes the system fall back to Wall time if not initialized.  
+    https://github.com/ros/geometry/issues/30
+*/
+void sleep_fallback_to_wall(const ros::Duration& d)
+{
+  try
+  {
+      d.sleep();
+  }
+  catch (ros::TimeNotInitializedException ex)
+  {
+    ros::WallDuration wd = ros::WallDuration(d.sec, d.nsec); 
+    wd.sleep();
+  }
+}
 
 bool
 Buffer::canTransform(const std::string& target_frame, const std::string& source_frame, 
 		     const ros::Time& time, const ros::Duration timeout, std::string* errstr) const
 {
+  if (!checkAndErrorDedicatedThreadPresent(errstr))
+    return false;
+
   // poll for transform if timeout is set
-  ros::Time start_time = ros::Time::now();
-  while (ros::Time::now() < start_time + timeout && 
-	 !canTransform(target_frame, source_frame, time))
-    ros::Duration(0.01).sleep();
+  ros::Time start_time = now_fallback_to_wall();
+  while (now_fallback_to_wall() < start_time + timeout && 
+	 !canTransform(target_frame, source_frame, time) &&
+         now_fallback_to_wall() >= start_time) //don't wait if time jumped backwards
+    sleep_fallback_to_wall(ros::Duration(0.01));
   return canTransform(target_frame, source_frame, time, errstr);
 }
 
@@ -81,14 +122,40 @@ Buffer::canTransform(const std::string& target_frame, const ros::Time& target_ti
 		     const std::string& source_frame, const ros::Time& source_time,
 		     const std::string& fixed_frame, const ros::Duration timeout, std::string* errstr) const
 {
+  if (!checkAndErrorDedicatedThreadPresent(errstr))
+    return false;
+
   // poll for transform if timeout is set
-  ros::Time start_time = ros::Time::now();
-  while (ros::Time::now() < start_time + timeout && 
-	 !canTransform(target_frame, target_time, source_frame, source_time, fixed_frame))
-    ros::Duration(0.01).sleep();
+  ros::Time start_time = now_fallback_to_wall();
+  while (now_fallback_to_wall() < start_time + timeout && 
+	 !canTransform(target_frame, target_time, source_frame, source_time, fixed_frame) &&
+         now_fallback_to_wall() >= start_time) //don't wait if time jumped backwards
+    sleep_fallback_to_wall(ros::Duration(0.01));
   return canTransform(target_frame, target_time, source_frame, source_time, fixed_frame, errstr);
 }
 
+
+bool Buffer::getFrames(tf2_msgs::FrameGraph::Request& req, tf2_msgs::FrameGraph::Response& res) 
+{
+  res.frame_yaml = allFramesAsYAML();
+  return true;
+}
+
+
+
+bool Buffer::checkAndErrorDedicatedThreadPresent(std::string* error_str) const
+{
+  if (isUsingDedicatedThread())
+    return true;
+  
+
+
+  if (error_str)
+    *error_str = tf2_ros::threading_error;
+
+  ROS_ERROR("%s", tf2_ros::threading_error.c_str());
+  return false;
+}
 
 
 

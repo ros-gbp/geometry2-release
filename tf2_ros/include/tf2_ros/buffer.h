@@ -36,17 +36,18 @@
 #include <tf2/buffer_core.h>
 #include <tf2_msgs/FrameGraph.h>
 #include <ros/ros.h>
+#include <tf2/convert.h>
 
 
-namespace tf2
+namespace tf2_ros
 {
 
   // extend the BufferInterface class and BufferCore class
-  class Buffer: public BufferInterface, public BufferCore
+  class Buffer: public BufferInterface, public tf2::BufferCore
   {
   public:
-    using BufferCore::lookupTransform;
-    using BufferCore::canTransform;
+    using tf2::BufferCore::lookupTransform;
+    using tf2::BufferCore::canTransform;
 
     /**
      * @brief  Constructor for a Buffer object
@@ -54,7 +55,7 @@ namespace tf2
      * @param debug Whether to advertise the view_frames service that exposes debugging information from the buffer
      * @return 
      */
-    Buffer(ros::Duration cache_time = ros::Duration(BufferCore::DEFAULT_CACHE_TIME), bool debug = true);
+    Buffer(ros::Duration cache_time = ros::Duration(BufferCore::DEFAULT_CACHE_TIME), bool debug = false);
 
     /** \brief Get the transform between two frames by frame ID.
      * \param target_frame The frame to which data should be transformed
@@ -115,16 +116,23 @@ namespace tf2
 		   const std::string& source_frame, const ros::Time& source_time,
 		   const std::string& fixed_frame, const ros::Duration timeout, std::string* errstr = NULL) const;
 
+
+    
+    
   private:
-    bool getFrames(tf2_msgs::FrameGraph::Request& req, tf2_msgs::FrameGraph::Response& res) 
-    {
-      res.frame_yaml = allFramesAsYAML();
-      return true;
-    }
+    bool getFrames(tf2_msgs::FrameGraph::Request& req, tf2_msgs::FrameGraph::Response& res) ;
+
+
+    // conditionally error if dedicated_thread unset.
+    bool checkAndErrorDedicatedThreadPresent(std::string* errstr) const;
 
     ros::ServiceServer frames_server_;
 
+
   }; // class 
+
+static const std::string threading_error = "Do not call canTransform or lookupTransform with a timeout unless you are using another thread for populating data. Without a dedicated thread it will always timeout.  If you have a seperate thread servicing tf messages, call setUsingDedicatedThread(true) on your Buffer instance.";
+
   
 } // namespace
 

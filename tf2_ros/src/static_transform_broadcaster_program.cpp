@@ -34,7 +34,7 @@ int main(int argc, char ** argv)
 {
   //Initialize ROS
   ros::init(argc, argv,"static_transform_publisher", ros::init_options::AnonymousName);
-  tf2::StaticTransformBroadcaster broadcaaster;
+  tf2_ros::StaticTransformBroadcaster broadcaaster;
 
   if(argc == 10)
   {
@@ -91,10 +91,10 @@ int main(int argc, char ** argv)
   else
   {
     printf("A command line utility for manually sending a transform.\n");
-    printf("It will periodicaly republish the given transform. \n");
-    printf("Usage: static_transform_publisher x y z yaw pitch roll frame_id child_frame_id \n");
+    //printf("It will periodicaly republish the given transform. \n");
+    //printf("Usage: static_transform_publisher x y z yaw pitch roll frame_id child_frame_id \n");
     //printf("OR \n");
-    //printf("Usage: static_transform_publisher x y z qx qy qz qw frame_id child_frame_id \n");
+    printf("Usage: static_transform_publisher x y z qx qy qz qw frame_id child_frame_id \n");
     printf("\nThis transform is the transform of the coordinate frame from frame_id into the coordinate frame \n");
     printf("of the child_frame_id.  \n");
     ROS_ERROR("static_transform_publisher exited due to not having the right number of arguments");
