@@ -1,3 +1,34 @@
+## geometry_experimental - 0.4.9-0
+
+User `tfoote@BigFoote` released the packages in the `geometry_experimental` repository by running `/usr/bin/bloom-release -t hydro -r hydro geometry_experimental` on `Thu, 07 Nov 2013 00:24:28 -0000`
+
+These packages were released:
+- `geometry_experimental`
+- `tf2`
+- `tf2_bullet`
+- `tf2_geometry_msgs`
+- `tf2_kdl`
+- `tf2_msgs`
+- `tf2_py`
+- `tf2_ros`
+- `tf2_tools`
+
+These packages were explicitly ignored:
+- `test_tf2`
+
+Version of package(s) in repository `geometry_experimental`:
+- rosdistro version: `0.4.8-0`
+- old version: `0.4.8-0`
+- new version: `0.4.9-0`
+
+Versions of tools used:
+- bloom version: `0.4.4`
+- catkin_pkg version: `0.1.22`
+- rosdep version: `0.10.23`
+- rosdistro version: `0.2.15`
+- vcstools version: `0.1.32`
+
+
 ## geometry_experimental - 0.3.7-0
 
 User `tfoote@BigFoote` released the packages in the `geometry_experimental` repository by running `/usr/bin/bloom-release geometry_experimental -t groovy -r groovy -n` on `Wed, 06 Nov 2013 22:49:07 -0000`
