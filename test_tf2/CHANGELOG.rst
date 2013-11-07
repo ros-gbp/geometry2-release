@@ -2,6 +2,9 @@
 Changelog for package test_tf2
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+0.4.9 (2013-11-06)
+------------------
+
 0.4.8 (2013-11-06)
 ------------------
 * Fixed static_transform_publisher duplicate check, added rostest.
