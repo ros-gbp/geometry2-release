@@ -2,6 +2,10 @@
 Changelog for package tf2_bullet
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+0.4.9 (2013-11-06)
+------------------
+* adding missing buildtool dependency on pkg-config
+
 0.4.8 (2013-11-06)
 ------------------
 
