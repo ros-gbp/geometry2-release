@@ -2,6 +2,11 @@
 Changelog for package test_tf2
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+0.4.10 (2013-12-26)
+-------------------
+* fixing kdl linking for tests
+* Contributors: Tully Foote
+
 0.4.9 (2013-11-06)
 ------------------
 
