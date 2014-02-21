@@ -1,0 +1,12 @@
+Source: ros-indigo-tf2
+Section: misc
+Priority: extra
+Maintainer: Tully Foote <tfoote@osrfoundation.org>
+Build-Depends: debhelper (>= 7.0.50~), ros-indigo-catkin (>= 0.5.68), ros-indigo-console-bridge, ros-indigo-geometry-msgs, ros-indigo-rostime, ros-indigo-tf2-msgs
+Homepage: http://www.ros.org/wiki/tf2
+Standards-Version: 3.9.2
+
+Package: ros-indigo-tf2
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends}, ros-indigo-console-bridge, ros-indigo-geometry-msgs, ros-indigo-rostime, ros-indigo-tf2-msgs
+Description: tf2 is the second generation of the transform library, which lets the user keep track of multiple coordinate frames over time. tf2 maintains the relationship between coordinate frames in a tree structure buffered in time, and lets the user transform points, vectors, etc between any two coordinate frames at any desired point in time.
