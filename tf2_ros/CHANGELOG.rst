@@ -2,6 +2,9 @@
 Changelog for package tf2_ros
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+0.5.2 (2014-02-20)
+------------------
+
 0.5.1 (2014-02-14)
 ------------------
 * adding const to MessageEvent data
