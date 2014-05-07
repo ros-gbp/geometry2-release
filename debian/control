@@ -1,0 +1,12 @@
+Source: ros-indigo-tf2-ros
+Section: misc
+Priority: extra
+Maintainer: Tully Foote <tfoote@osrfoundation.org>
+Build-Depends: debhelper (>= 7.0.50~), ros-indigo-actionlib, ros-indigo-actionlib-msgs, ros-indigo-catkin (>= 0.5.68), ros-indigo-geometry-msgs, ros-indigo-message-filters (>= 1.11.1), ros-indigo-roscpp, ros-indigo-rosgraph, ros-indigo-rospy, ros-indigo-rostest, ros-indigo-std-msgs, ros-indigo-tf2, ros-indigo-tf2-msgs, ros-indigo-tf2-py
+Homepage: http://www.ros.org/wiki/tf2_ros
+Standards-Version: 3.9.2
+
+Package: ros-indigo-tf2-ros
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends}, ros-indigo-actionlib, ros-indigo-actionlib-msgs, ros-indigo-geometry-msgs, ros-indigo-message-filters, ros-indigo-roscpp, ros-indigo-rosgraph, ros-indigo-rospy, ros-indigo-std-msgs, ros-indigo-tf2, ros-indigo-tf2-msgs, ros-indigo-tf2-py
+Description: This package contains the ROS bindings for the tf2 library, for both Python and C++.
