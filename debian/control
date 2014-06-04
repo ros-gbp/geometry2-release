@@ -1,0 +1,12 @@
+Source: ros-hydro-tf2-ros
+Section: misc
+Priority: extra
+Maintainer: Tully Foote <tfoote@osrfoundation.org>
+Build-Depends: debhelper (>= 9.0.0), ros-hydro-actionlib, ros-hydro-actionlib-msgs, ros-hydro-catkin (>= 0.5.68), ros-hydro-geometry-msgs, ros-hydro-message-filters, ros-hydro-roscpp, ros-hydro-rosgraph, ros-hydro-rospy, ros-hydro-rostest, ros-hydro-std-msgs, ros-hydro-tf2, ros-hydro-tf2-msgs, ros-hydro-tf2-py
+Homepage: http://www.ros.org/wiki/tf2_ros
+Standards-Version: 3.9.2
+
+Package: ros-hydro-tf2-ros
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends}, ros-hydro-actionlib, ros-hydro-actionlib-msgs, ros-hydro-geometry-msgs, ros-hydro-message-filters, ros-hydro-roscpp, ros-hydro-rosgraph, ros-hydro-rospy, ros-hydro-std-msgs, ros-hydro-tf2, ros-hydro-tf2-msgs, ros-hydro-tf2-py
+Description: This package contains the ROS bindings for the tf2 library, for both Python and C++.
