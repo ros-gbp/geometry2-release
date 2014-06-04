@@ -2,6 +2,11 @@
 Changelog for package tf2
 ^^^^^^^^^^^^^^^^^^^^^^^^^
 
+0.4.11 (2014-06-04)
+-------------------
+* Fix format string
+* Contributors: Austin
+
 0.4.10 (2013-12-26)
 -------------------
 * updated error message. fixes `#38 <https://github.com/ros/geometry_experimental/issues/38>`_
