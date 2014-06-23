@@ -2,6 +2,11 @@
 Changelog for package test_tf2
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+0.5.5 (2014-06-23)
+------------------
+* Removed AsyncSpinner workaround
+* Contributors: Esteve Fernandez
+
 0.5.4 (2014-05-07)
 ------------------
 * Clean up warnings about autostart and add some assertions for coverage
