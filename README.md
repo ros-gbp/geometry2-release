@@ -1,3 +1,36 @@
+## geometry_experimental (indigo) - 0.5.5-1
+
+The packages in the `geometry_experimental` repository were released into the `indigo` distro by running `/home/tfoote/work/bloomenv/bin/bloom-release geometry_experimental -t indigo -r indigo` on `Tue, 24 Jun 2014 09:17:07 -0000`
+
+These packages were released:
+- `geometry_experimental`
+- `tf2`
+- `tf2_bullet`
+- `tf2_geometry_msgs`
+- `tf2_kdl`
+- `tf2_msgs`
+- `tf2_py`
+- `tf2_ros`
+- `tf2_tools`
+
+These packages were explicitly ignored:
+- `test_tf2`
+
+Version of package(s) in repository `geometry_experimental`:
+- upstream repository: https://github.com/ros/geometry_experimental.git
+- release repository: https://github.com/ros-gbp/geometry_experimental-release.git
+- rosdistro version: `0.5.5-0`
+- old version: `0.5.5-0`
+- new version: `0.5.5-1`
+
+Versions of tools used:
+- bloom version: `0.5.11-dev`
+- catkin_pkg version: `0.2.2`
+- rosdep version: `0.10.27`
+- rosdistro version: `0.3.5`
+- vcstools version: `0.1.35`
+
+
 ## geometry_experimental (indigo) - 0.5.5-0
 
 The packages in the `geometry_experimental` repository were released into the `indigo` distro by running `/usr/bin/bloom-release geometry_experimental -t indigo -r indigo` on `Mon, 23 Jun 2014 22:00:16 -0000`
