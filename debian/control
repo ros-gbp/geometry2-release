@@ -1,0 +1,12 @@
+Source: ros-indigo-geometry-experimental
+Section: misc
+Priority: extra
+Maintainer: Tully Foote <tfoote@osrfoundation.org>
+Build-Depends: debhelper (>= 9.0.0), ros-indigo-catkin
+Homepage: http://www.ros.org/wiki/geometry_experimental
+Standards-Version: 3.9.2
+
+Package: ros-indigo-geometry-experimental
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends}, ros-indigo-tf2, ros-indigo-tf2-bullet, ros-indigo-tf2-geometry-msgs, ros-indigo-tf2-kdl, ros-indigo-tf2-msgs, ros-indigo-tf2-ros, ros-indigo-tf2-tools
+Description: The second generation Transform Library in ros. This metapackage is deprecated, but is kept for backwards compatability.
