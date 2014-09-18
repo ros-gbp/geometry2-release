@@ -41,6 +41,7 @@
 #include <boost/bind.hpp>
 #include <boost/shared_ptr.hpp>
 #include <boost/thread.hpp>
+#include <boost/signals.hpp>
 
 #include <message_filters/connection.h>
 #include <message_filters/simple_filter.h>
@@ -107,7 +108,7 @@ public:
   typedef boost::shared_ptr<M const> MConstPtr;
   typedef ros::MessageEvent<M const> MEvent;
   typedef boost::function<void(const MConstPtr&, FilterFailureReason)> FailureCallback;
-  typedef boost::signals2::signal<void(const MConstPtr&, FilterFailureReason)> FailureSignal;
+  typedef boost::signal<void(const MConstPtr&, FilterFailureReason)> FailureSignal;
 
   // If you hit this assert your message does not have a header, or does not have the HasHeader trait defined for it
   ROS_STATIC_ASSERT(ros::message_traits::HasHeader<M>::value);
@@ -618,7 +619,7 @@ private:
     }
     else
     {
-      this->signalMessage(evt);
+      signalMessage(evt);
     }
   }
 

@@ -90,21 +90,40 @@ void TransformListener::initWithThread()
 
 
 
-void TransformListener::subscription_callback(const ros::MessageEvent<tf2_msgs::TFMessage const>& msg_evt)
+void TransformListener::subscription_callback(const tf2_msgs::TFMessageConstPtr& msg)
 {
-  subscription_callback_impl(msg_evt, false);
+  subscription_callback_impl(msg, false);
 }
-void TransformListener::static_subscription_callback(const ros::MessageEvent<tf2_msgs::TFMessage const>& msg_evt)
+void TransformListener::static_subscription_callback(const tf2_msgs::TFMessageConstPtr& msg)
 {
-  subscription_callback_impl(msg_evt, true);
+  subscription_callback_impl(msg, true);
 }
 
-void TransformListener::subscription_callback_impl(const ros::MessageEvent<tf2_msgs::TFMessage const>& msg_evt, bool is_static)
+void TransformListener::subscription_callback_impl(const tf2_msgs::TFMessageConstPtr& msg, bool is_static)
 {
-  const tf2_msgs::TFMessage& msg_in = *(msg_evt.getConstMessage());
-  std::string authority = msg_evt.getPublisherName(); // lookup the authority
+  ros::Time now = ros::Time::now();
+  if(now < last_update_){
+    ROS_WARN("Detected jump back in time. Clearing TF buffer.");
+    buffer_.clear();
+  }
+  last_update_ = now;
+
+  const tf2_msgs::TFMessage& msg_in = *msg;
   for (unsigned int i = 0; i < msg_in.transforms.size(); i++)
   {
+    std::map<std::string, std::string>* msg_header_map = msg_in.__connection_header.get();
+    std::string authority;
+    std::map<std::string, std::string>::iterator it = msg_header_map->find("callerid");
+    if (it == msg_header_map->end())
+    {
+      ROS_WARN("Message recieved without callerid");
+      authority = "no callerid";
+    }
+    else 
+    {
+      authority = it->second;
+    }
+
     try
     {
       buffer_.setTransform(msg_in.transforms[i], authority, is_static);

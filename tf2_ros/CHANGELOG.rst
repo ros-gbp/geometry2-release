@@ -2,33 +2,20 @@
 Changelog for package tf2_ros
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-0.5.5 (2014-06-23)
-------------------
+0.4.12 (2014-09-18)
+-------------------
+* python patch for `#57 <https://github.com/ros/geometry_experimental/issues/57>`_
+  instead of patching lower level API expose the tuple to the user only if requested via optional argument
+* adding unit tests to cover `#43 <https://github.com/ros/geometry_experimental/issues/43>`_
+* Make transform_listener reset tf buffer on loop detection
+  This makes tf2 work with `rosbag --clock --loop` as expected.
+* Contributors: Tully Foote, v4hn
 
-0.5.4 (2014-05-07)
-------------------
-* surpressing autostart on the server objects to not incur warnings
-* switch to boost signals2 following `ros/ros_comm#267 <https://github.com/ros/ros_comm/issues/267>`_, blocking `ros/geometry#23 <https://github.com/ros/geometry/issues/23>`_
-* fix compilation with gcc 4.9
-* make can_transform correctly wait
+0.4.11 (2014-06-04)
+-------------------
+* Fix sleeplogic in can_transform. 
 * explicitly set the publish queue size for rospy
-* Contributors: Tully Foote, Vincent Rabaud, v4hn
-
-0.5.3 (2014-02-21)
-------------------
-
-0.5.2 (2014-02-20)
-------------------
-
-0.5.1 (2014-02-14)
-------------------
-* adding const to MessageEvent data
-* Contributors: Tully Foote
-
-0.5.0 (2014-02-14)
-------------------
-* TF2 uses message events to get connection header information
-* Contributors: Kevin Watts
+* Contributors: Tully Foote, v4hn
 
 0.4.10 (2013-12-26)
 -------------------
