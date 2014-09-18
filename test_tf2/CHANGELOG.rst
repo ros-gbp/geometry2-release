@@ -2,6 +2,9 @@
 Changelog for package test_tf2
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+0.5.6 (2014-09-18)
+------------------
+
 0.5.5 (2014-06-23)
 ------------------
 * Removed AsyncSpinner workaround
