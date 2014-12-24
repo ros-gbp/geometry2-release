@@ -2,6 +2,11 @@
 Changelog for package tf2_kdl
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+0.5.7 (2014-12-23)
+------------------
+* fixing install rules and adding backwards compatible include with #warning
+* Contributors: Tully Foote
+
 0.5.6 (2014-09-18)
 ------------------
 
