@@ -1,0 +1,8 @@
+ros-jade-tf2-sensor-msgs (0.5.7-0utopic) utopic; urgency=high
+
+  * add support for transforming sensor_msgs::PointCloud2
+  * Contributors: Vincent Rabaud
+
+ -- Vincent Rabaud <vincent.rabaud@gmail.com>  Tue, 23 Dec 2014 08:00:00 -0000
+
+
