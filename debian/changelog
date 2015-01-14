@@ -1,0 +1,116 @@
+ros-jade-tf2-py (0.5.7-0trusty) trusty; urgency=high
+
+
+
+ -- Tully Foote <tfoote@osrfoundation.org>  Tue, 23 Dec 2014 08:00:00 -0000
+
+ros-jade-tf2-py (0.5.6-0trusty) trusty; urgency=high
+
+
+
+ -- Tully Foote <tfoote@osrfoundation.org>  Thu, 18 Sep 2014 07:00:00 -0000
+
+ros-jade-tf2-py (0.5.5-0trusty) trusty; urgency=high
+
+
+
+ -- Tully Foote <tfoote@osrfoundation.org>  Mon, 23 Jun 2014 07:00:00 -0000
+
+ros-jade-tf2-py (0.5.4-0trusty) trusty; urgency=high
+
+
+
+ -- Tully Foote <tfoote@osrfoundation.org>  Wed, 07 May 2014 07:00:00 -0000
+
+ros-jade-tf2-py (0.5.3-0trusty) trusty; urgency=high
+
+
+
+ -- Tully Foote <tfoote@osrfoundation.org>  Fri, 21 Feb 2014 08:00:00 -0000
+
+ros-jade-tf2-py (0.5.2-0trusty) trusty; urgency=high
+
+
+
+ -- Tully Foote <tfoote@osrfoundation.org>  Thu, 20 Feb 2014 08:00:00 -0000
+
+ros-jade-tf2-py (0.5.1-0trusty) trusty; urgency=high
+
+
+
+ -- Tully Foote <tfoote@osrfoundation.org>  Fri, 14 Feb 2014 08:00:00 -0000
+
+ros-jade-tf2-py (0.5.0-0trusty) trusty; urgency=high
+
+
+
+ -- Tully Foote <tfoote@osrfoundation.org>  Fri, 14 Feb 2014 08:00:00 -0000
+
+ros-jade-tf2-py (0.4.10-0trusty) trusty; urgency=high
+
+  * adding support for static transforms in python listener. Fixes #46 <https://github.com/ros/geometry_experimental/issues/46>
+  * Contributors: Tully Foote
+
+ -- Tully Foote <tfoote@osrfoundation.org>  Thu, 26 Dec 2013 08:00:00 -0000
+
+ros-jade-tf2-py (0.4.9-0trusty) trusty; urgency=high
+
+
+
+ -- Tully Foote <tfoote@osrfoundation.org>  Wed, 06 Nov 2013 08:00:00 -0000
+
+ros-jade-tf2-py (0.4.8-0trusty) trusty; urgency=high
+
+
+
+ -- Tully Foote <tfoote@osrfoundation.org>  Wed, 06 Nov 2013 08:00:00 -0000
+
+ros-jade-tf2-py (0.4.7-0trusty) trusty; urgency=high
+
+
+
+ -- Tully Foote <tfoote@osrfoundation.org>  Wed, 28 Aug 2013 07:00:00 -0000
+
+ros-jade-tf2-py (0.4.6-0trusty) trusty; urgency=high
+
+
+
+ -- Tully Foote <tfoote@osrfoundation.org>  Wed, 28 Aug 2013 07:00:00 -0000
+
+ros-jade-tf2-py (0.4.5-0trusty) trusty; urgency=high
+
+
+
+ -- Tully Foote <tfoote@osrfoundation.org>  Thu, 11 Jul 2013 07:00:00 -0000
+
+ros-jade-tf2-py (0.4.4-0trusty) trusty; urgency=high
+
+  * tf2_py: Fixes warning, implicit conversion of NULL
+
+ -- Tully Foote <tfoote@osrfoundation.org>  Tue, 09 Jul 2013 07:00:00 -0000
+
+ros-jade-tf2-py (0.4.3-0trusty) trusty; urgency=high
+
+
+
+ -- Tully Foote <tfoote@osrfoundation.org>  Fri, 05 Jul 2013 07:00:00 -0000
+
+ros-jade-tf2-py (0.4.2-0trusty) trusty; urgency=high
+
+
+
+ -- Tully Foote <tfoote@osrfoundation.org>  Fri, 05 Jul 2013 07:00:00 -0000
+
+ros-jade-tf2-py (0.4.1-0trusty) trusty; urgency=high
+
+
+
+ -- Tully Foote <tfoote@osrfoundation.org>  Fri, 05 Jul 2013 07:00:00 -0000
+
+ros-jade-tf2-py (0.4.0-0trusty) trusty; urgency=high
+
+  * splitting rospy dependency into tf2_py so tf2 is pure c++ library.
+
+ -- Tully Foote <tfoote@osrfoundation.org>  Thu, 27 Jun 2013 07:00:00 -0000
+
+
