@@ -1,0 +1,16 @@
+ros-indigo-tf2-sensor-msgs (0.5.8-0saucy) saucy; urgency=high
+
+  * ODR violation fixes and more conversions
+  * Fix keeping original pointcloud header in transformed pointcloud
+  * Contributors: Paul Bovbel, Tully Foote, Vincent Rabaud
+
+ -- Vincent Rabaud <vincent.rabaud@gmail.com>  Tue, 17 Mar 2015 07:00:00 -0000
+
+ros-indigo-tf2-sensor-msgs (0.5.7-0saucy) saucy; urgency=high
+
+  * add support for transforming sensor_msgs::PointCloud2
+  * Contributors: Vincent Rabaud
+
+ -- Vincent Rabaud <vincent.rabaud@gmail.com>  Tue, 23 Dec 2014 08:00:00 -0000
+
+
