@@ -275,7 +275,7 @@ TimeCacheInterfacePtr BufferCore::allocateFrame(CompactFrameID cfid, bool is_sta
   } else {
     frames_[cfid] = TimeCacheInterfacePtr(new TimeCache(cache_time_));
   }
-  
+
   return frames_[cfid];
 }
 
@@ -1018,7 +1018,7 @@ int BufferCore::getLatestCommonTime(CompactFrameID target_id, CompactFrameID sou
   return tf2_msgs::TF2Error::NO_ERROR;
 }
 
-std::string BufferCore::allFramesAsYAML() const
+std::string BufferCore::allFramesAsYAML(double current_time) const
 {
   std::stringstream mstream;
   boost::mutex::scoped_lock lock(frame_mutex_);
@@ -1066,10 +1066,18 @@ std::string BufferCore::allFramesAsYAML() const
     mstream << "  rate: " << rate << std::endl;
     mstream << "  most_recent_transform: " << (cache->getLatestTimestamp()).toSec() << std::endl;
     mstream << "  oldest_transform: " << (cache->getOldestTimestamp()).toSec() << std::endl;
+    if ( current_time > 0 ) {
+      mstream << "  transform_delay: " << current_time - cache->getLatestTimestamp().toSec() << std::endl;
+    }
     mstream << "  buffer_length: " << (cache->getLatestTimestamp() - cache->getOldestTimestamp()).toSec() << std::endl;
   }
 
   return mstream.str();
+}
+
+std::string BufferCore::allFramesAsYAML() const
+{
+  return this->allFramesAsYAML(0.0);
 }
 
 TransformableCallbackHandle BufferCore::addTransformableCallback(const TransformableCallback& cb)
@@ -1317,7 +1325,7 @@ void BufferCore::testTransformableRequests()
 }
 
 
-std::string BufferCore::_allFramesAsDot() const
+std::string BufferCore::_allFramesAsDot(double current_time) const
 {
   std::stringstream mstream;
   mstream << "digraph G {" << std::endl;
@@ -1328,7 +1336,6 @@ std::string BufferCore::_allFramesAsDot() const
   if (frames_.size() == 1) {
     mstream <<"\"no tf data recieved\"";
   }
-
   mstream.precision(3);
   mstream.setf(std::ios::fixed,std::ios::floatfield);
 
@@ -1359,7 +1366,10 @@ std::string BufferCore::_allFramesAsDot() const
       //<< "Time: " << current_time.toSec() << "\\n"
             << "Broadcaster: " << authority << "\\n"
             << "Average rate: " << rate << " Hz\\n"
-            << "Most recent transform: " << (counter_frame->getLatestTimestamp()).toSec() <<" \\n"
+            << "Most recent transform: " << (counter_frame->getLatestTimestamp()).toSec() <<" ";
+    if (current_time > 0)
+      mstream << "( "<<  current_time - counter_frame->getLatestTimestamp().toSec() << " sec old)";
+    mstream << "\\n"
       //    << "(time: " << getFrame(counter)->getLatestTimestamp().toSec() << ")\\n"
       //    << "Oldest transform: " << (current_time - getFrame(counter)->getOldestTimestamp()).toSec() << " sec old \\n"
       //    << "(time: " << (getFrame(counter)->getOldestTimestamp()).toSec() << ")\\n"
@@ -1372,6 +1382,12 @@ std::string BufferCore::_allFramesAsDot() const
     unsigned int frame_id_num;
     TimeCacheInterfacePtr counter_frame = getFrame(counter);
     if (!counter_frame) {
+      if (current_time > 0) {
+        mstream << "edge [style=invis];" <<std::endl;
+        mstream << " subgraph cluster_legend { style=bold; color=black; label =\"view_frames Result\";\n"
+                << "\"Recorded at time: " << current_time << "\"[ shape=plaintext ] ;\n "
+                << "}" << "->" << "\"" << frameIDs_reverse[counter] << "\";" << std::endl;
+      }
       continue;
     }
     if (counter_frame->getData(ros::Time(), temp)) {
@@ -1383,15 +1399,20 @@ std::string BufferCore::_allFramesAsDot() const
     if(frameIDs_reverse[frame_id_num]=="NO_PARENT")
     {
       mstream << "edge [style=invis];" <<std::endl;
-      mstream << " subgraph cluster_legend { style=bold; color=black; label =\"view_frames Result\";\n"
-        //<< "\"Recorded at time: " << current_time.toSec() << "\"[ shape=plaintext ] ;\n "
-	      << "}" << "->" << "\"" << frameIDs_reverse[counter] << "\";" << std::endl;
+      mstream << " subgraph cluster_legend { style=bold; color=black; label =\"view_frames Result\";\n";
+      if (current_time > 0)
+        mstream << "\"Recorded at time: " << current_time << "\"[ shape=plaintext ] ;\n ";
+      mstream << "}" << "->" << "\"" << frameIDs_reverse[counter] << "\";" << std::endl;
     }
   }
   mstream << "}";
   return mstream.str();
 }
 
+std::string BufferCore::_allFramesAsDot() const
+{
+  return _allFramesAsDot(0.0);
+}
 
 void BufferCore::_chainAsVector(const std::string & target_frame, ros::Time target_time, const std::string & source_frame, ros::Time source_time, const std::string& fixed_frame, std::vector<std::string>& output) const
 {
