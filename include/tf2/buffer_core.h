@@ -212,6 +212,10 @@ public:
   /** \brief A way to see what frames have been cached in yaml format
    * Useful for debugging tools
    */
+  std::string allFramesAsYAML(double current_time) const;
+
+  /** Backwards compatibility for #84
+  */
   std::string allFramesAsYAML() const;
 
   /** \brief A way to see what frames have been cached
@@ -293,6 +297,7 @@ public:
   /** \brief Backwards compatabilityA way to see what frames have been cached
    * Useful for debugging
    */
+  std::string _allFramesAsDot(double current_time) const;
   std::string _allFramesAsDot() const;
 
   /** \brief Backwards compatabilityA way to see what frames are in a chain
