@@ -2,6 +2,11 @@
 Changelog for package tf2_tools
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+0.5.8 (2015-03-17)
+------------------
+* remove useless Makefile files
+* Contributors: Vincent Rabaud
+
 0.5.7 (2014-12-23)
 ------------------
 
