@@ -2,6 +2,14 @@
 Changelog for package tf2_geometry_msgs
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+0.5.8 (2015-03-17)
+------------------
+* remove useless Makefile files
+* tf2 optimizations
+* add conversions of type between tf2 and geometry_msgs
+* fix ODR violations
+* Contributors: Vincent Rabaud
+
 0.5.7 (2014-12-23)
 ------------------
 * fixing transitive dependency for kdl. Fixes `#53 <https://github.com/ros/geometry_experimental/issues/53>`_
