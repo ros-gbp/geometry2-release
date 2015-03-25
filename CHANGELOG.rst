@@ -2,6 +2,9 @@
 Changelog for package tf2_sensor_msgs
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+0.5.9 (2015-03-25)
+------------------
+
 0.5.8 (2015-03-17)
 ------------------
 * ODR violation fixes and more conversions
