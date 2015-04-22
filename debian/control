@@ -1,0 +1,12 @@
+Source: ros-jade-tf2-ros
+Section: misc
+Priority: extra
+Maintainer: Tully Foote <tfoote@osrfoundation.org>
+Build-Depends: debhelper (>= 9.0.0), ros-jade-actionlib, ros-jade-actionlib-msgs, ros-jade-catkin (>= 0.5.68), ros-jade-geometry-msgs, ros-jade-message-filters (>= 1.11.1), ros-jade-roscpp, ros-jade-rosgraph, ros-jade-rospy, ros-jade-rostest, ros-jade-std-msgs, ros-jade-tf2, ros-jade-tf2-msgs, ros-jade-tf2-py
+Homepage: http://www.ros.org/wiki/tf2_ros
+Standards-Version: 3.9.2
+
+Package: ros-jade-tf2-ros
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends}, ros-jade-actionlib, ros-jade-actionlib-msgs, ros-jade-geometry-msgs, ros-jade-message-filters, ros-jade-roscpp, ros-jade-rosgraph, ros-jade-rospy, ros-jade-std-msgs, ros-jade-tf2, ros-jade-tf2-msgs, ros-jade-tf2-py
+Description: This package contains the ROS bindings for the tf2 library, for both Python and C++.
