@@ -50,10 +50,10 @@
 #include <ros/init.h>
 
 #define TF2_ROS_MESSAGEFILTER_DEBUG(fmt, ...) \
-  ROS_DEBUG_NAMED("message_filter", "MessageFilter [target=%s]: "fmt, getTargetFramesString().c_str(), __VA_ARGS__)
+  ROS_DEBUG_NAMED("message_filter", "MessageFilter [target=%s]: ", fmt, getTargetFramesString().c_str(), __VA_ARGS__)
 
 #define TF2_ROS_MESSAGEFILTER_WARN(fmt, ...) \
-  ROS_WARN_NAMED("message_filter", "MessageFilter [target=%s]: "fmt, getTargetFramesString().c_str(), __VA_ARGS__)
+  ROS_WARN_NAMED("message_filter", "MessageFilter [target=%s]: ", fmt, getTargetFramesString().c_str(), __VA_ARGS__)
 
 namespace tf2_ros
 {
@@ -110,7 +110,10 @@ public:
   typedef boost::signals2::signal<void(const MConstPtr&, FilterFailureReason)> FailureSignal;
 
   // If you hit this assert your message does not have a header, or does not have the HasHeader trait defined for it
-  ROS_STATIC_ASSERT(ros::message_traits::HasHeader<M>::value);
+  // Actually, we need to check that the message has a header, or that it
+  // has the FrameId and Stamp traits. However I don't know how to do that
+  // so simply commenting out for now.
+  //ROS_STATIC_ASSERT(ros::message_traits::HasHeader<M>::value);
 
   /**
    * \brief Constructor
@@ -239,7 +242,8 @@ public:
   {
     boost::mutex::scoped_lock frames_lock(target_frames_mutex_);
 
-    target_frames_ = target_frames;
+    target_frames_.resize(target_frames.size());
+    std::transform(target_frames.begin(), target_frames.end(), target_frames_.begin(), this->stripSlash);
     expected_success_count_ = target_frames_.size() + (time_tolerance_.isZero() ? 0 : 1);
 
     std::stringstream ss;
@@ -273,7 +277,7 @@ public:
    */
   void clear()
   {
-    boost::mutex::scoped_lock lock(messages_mutex_);
+    boost::unique_lock< boost::shared_mutex > unique_lock(messages_mutex_);
 
     TF2_ROS_MESSAGEFILTER_DEBUG("%s", "Cleared");
 
@@ -295,7 +299,7 @@ public:
 
     namespace mt = ros::message_traits;
     const MConstPtr& message = evt.getMessage();
-    const std::string& frame_id = *mt::FrameId<M>::pointer(*message);
+    std::string frame_id = stripSlash(mt::FrameId<M>::value(*message));
     ros::Time stamp = mt::TimeStamp<M>::value(*message);
 
     if (frame_id.empty())
@@ -355,7 +359,7 @@ public:
       }
     }
 
-    boost::mutex::scoped_lock lock(messages_mutex_);
+
     // We can transform already
     if (info.success_count == expected_success_count_)
     {
@@ -366,10 +370,13 @@ public:
       // If this message is about to push us past our queue size, erase the oldest message
       if (queue_size_ != 0 && message_count_ + 1 > queue_size_)
       {
+        // While we're using the reference keep a shared lock on the messages.
+        boost::shared_lock< boost::shared_mutex > shared_lock(messages_mutex_);
+
         ++dropped_message_count_;
         const MessageInfo& front = messages_.front();
         TF2_ROS_MESSAGEFILTER_DEBUG("Removed oldest message because buffer is full, count now %d (frame_id=%s, stamp=%f)", message_count_,
-                                (*mt::FrameId<M>::pointer(*front.event.getMessage())).c_str(), mt::TimeStamp<M>::value(*front.event.getMessage()).toSec());
+                                (mt::FrameId<M>::value(*front.event.getMessage())).c_str(), mt::TimeStamp<M>::value(*front.event.getMessage()).toSec());
 
         V_TransformableRequestHandle::const_iterator it = front.handles.begin();
         V_TransformableRequestHandle::const_iterator end = front.handles.end();
@@ -379,13 +386,20 @@ public:
         }
 
         messageDropped(front.event, filter_failure_reasons::Unknown);
-
+        // Unlock the shared lock and get a unique lock. Upgradeable lock is used in transformable.
+        // There can only be one upgrade lock. It's important the cancelTransformableRequest not deadlock with transformable.
+        // They both require the transformable_requests_mutex_ in BufferCore.
+        shared_lock.unlock();
+        // There is a very slight race condition if an older message arrives in this gap.
+        boost::unique_lock< boost::shared_mutex > unique_lock(messages_mutex_);
         messages_.pop_front();
-        --message_count_;
+         --message_count_;
       }
 
       // Add the message to our list
       info.event = evt;
+      // Lock access to the messages_ before modifying them.
+      boost::unique_lock< boost::shared_mutex > unique_lock(messages_mutex_);
       messages_.push_back(info);
       ++message_count_;
     }
@@ -452,7 +466,7 @@ private:
   {
     namespace mt = ros::message_traits;
 
-    boost::mutex::scoped_lock lock(messages_mutex_);
+    boost::upgrade_lock< boost::shared_mutex > lock(messages_mutex_);
 
     // find the message this request is associated with
     typename L_MessageInfo::iterator msg_it = messages_.begin();
@@ -482,7 +496,7 @@ private:
 
     bool can_transform = true;
     const MConstPtr& message = info.event.getMessage();
-    const std::string& frame_id = *mt::FrameId<M>::pointer(*message);
+    std::string frame_id = stripSlash(mt::FrameId<M>::value(*message));
     ros::Time stamp = mt::TimeStamp<M>::value(*message);
 
     if (result == tf2::TransformAvailable)
@@ -515,6 +529,8 @@ private:
       can_transform = false;
     }
 
+    // We will be mutating messages now, require unique lock
+    boost::upgrade_to_unique_lock< boost::shared_mutex > uniqueLock(lock);
     if (can_transform)
     {
       TF2_ROS_MESSAGEFILTER_DEBUG("Message ready in frame %s at time %.3f, count now %d", frame_id.c_str(), stamp.toSec(), message_count_ - 1);
@@ -641,6 +657,18 @@ private:
     failure_signal_(evt.getMessage(), reason);
   }
 
+  static
+  std::string stripSlash(const std::string& in)
+  {
+    if ( !in.empty() && (in[0] == '/'))
+    {
+      std::string out = in;
+      out.erase(0, 1);
+      return out;
+    }
+    return in;
+  }
+
   tf2::BufferCore& bc_; ///< The Transformer used to determine if transformation data is available
   V_string target_frames_; ///< The frames we need to be able to transform to before a message is ready
   std::string target_frames_string_;
@@ -662,7 +690,7 @@ private:
   typedef std::list<MessageInfo> L_MessageInfo;
   L_MessageInfo messages_;
   uint32_t message_count_; ///< The number of messages in the list.  Used because <container>.size() may have linear cost
-  boost::mutex messages_mutex_; ///< The mutex used for locking message list operations
+  boost::shared_mutex messages_mutex_; ///< The mutex used for locking message list operations
   uint32_t expected_success_count_;
 
   bool warned_about_empty_frame_id_;
