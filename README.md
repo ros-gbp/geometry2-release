@@ -1,3 +1,38 @@
+## geometry_experimental (jade) - 0.5.10-0
+
+The packages in the `geometry_experimental` repository were released into the `jade` distro by running `/usr/bin/bloom-release -t jade -r jade geometry_experimental` on `Wed, 22 Apr 2015 02:58:17 -0000`
+
+These packages were released:
+- `geometry_experimental`
+- `tf2`
+- `tf2_bullet`
+- `tf2_eigen`
+- `tf2_geometry_msgs`
+- `tf2_kdl`
+- `tf2_msgs`
+- `tf2_py`
+- `tf2_ros`
+- `tf2_sensor_msgs`
+- `tf2_tools`
+
+These packages were explicitly ignored:
+- `test_tf2`
+
+Version of package(s) in repository `geometry_experimental`:
+- upstream repository: https://github.com/ros/geometry_experimental.git
+- release repository: https://github.com/ros-gbp/geometry_experimental-release.git
+- rosdistro version: `0.5.9-0`
+- old version: `0.5.9-0`
+- new version: `0.5.10-0`
+
+Versions of tools used:
+- bloom version: `0.5.19`
+- catkin_pkg version: `0.2.8`
+- rosdep version: `0.11.2`
+- rosdistro version: `0.4.2`
+- vcstools version: `0.1.36`
+
+
 ## geometry_experimental (indigo) - 0.5.10-0
 
 The packages in the `geometry_experimental` repository were released into the `indigo` distro by running `/usr/bin/bloom-release -t indigo -r indigo geometry_experimental` on `Wed, 22 Apr 2015 02:52:11 -0000`
