@@ -2,6 +2,11 @@
 Changelog for package tf2_kdl
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+0.5.12 (2015-08-05)
+-------------------
+* Add kdl::Frame to TransformStamped conversion
+* Contributors: Paul Bovbel
+
 0.5.11 (2015-04-22)
 -------------------
 
