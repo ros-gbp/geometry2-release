@@ -2,6 +2,13 @@
 Changelog for package tf2_geometry_msgs
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+0.5.12 (2015-08-05)
+-------------------
+* Merge pull request `#112 <https://github.com/ros/geometry_experimental/issues/112>`_ from vrabaud/getYaw
+  Get yaw
+* add toMsg and fromMsg for QuaternionStamped
+* Contributors: Tully Foote, Vincent Rabaud
+
 0.5.11 (2015-04-22)
 -------------------
 
