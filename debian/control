@@ -1,0 +1,12 @@
+Source: ros-indigo-tf2-bullet
+Section: misc
+Priority: extra
+Maintainer: Tully Foote <tfoote@osrfoundation.org>
+Build-Depends: debhelper (>= 9.0.0), libbullet-dev, pkg-config, ros-indigo-catkin (>= 0.5.68), ros-indigo-geometry-msgs, ros-indigo-tf2
+Homepage: http://www.ros.org/wiki/tf2_bullet
+Standards-Version: 3.9.2
+
+Package: ros-indigo-tf2-bullet
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends}, libbullet-dev, ros-indigo-geometry-msgs, ros-indigo-tf2
+Description: tf2_bullet
