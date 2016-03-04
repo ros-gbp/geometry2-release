@@ -1,6 +1,6 @@
 <package>
   <name>tf2_ros</name>
-  <version>0.5.12</version>
+  <version>0.5.13</version>
   <description>
     This package contains the ROS bindings for the tf2 library, for both Python and C++. 
   </description>
@@ -37,7 +37,10 @@
   <run_depend>tf2_msgs</run_depend>
   <run_depend>tf2_py</run_depend>
 
-  <test_depend>rostest</test_depend>g
+  <test_depend>rostest</test_depend>
+
+
+
 
 </package>
 
