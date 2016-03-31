@@ -1,3 +1,40 @@
+## geometry2 (kinetic) - 0.5.13-0
+
+The packages in the `geometry2` repository were released into the `kinetic` distro by running `/usr/bin/bloom-release geometry2 -t kinetic -r kinetic --new-track` on `Thu, 31 Mar 2016 21:25:56 -0000`
+
+These packages were released:
+- `geometry_experimental`
+- `tf2`
+- `tf2_bullet`
+- `tf2_eigen`
+- `tf2_geometry_msgs`
+- `tf2_kdl`
+- `tf2_msgs`
+- `tf2_py`
+- `tf2_ros`
+- `tf2_sensor_msgs`
+- `tf2_tools`
+
+These packages were explicitly ignored:
+- `test_tf2`
+
+Version of package(s) in repository `geometry2`:
+
+- upstream repository: https://github.com/ros/geometry_experimental.git
+- release repository: unknown
+- rosdistro version: `null`
+- old version: `null`
+- new version: `0.5.13-0`
+
+Versions of tools used:
+
+- bloom version: `0.5.21`
+- catkin_pkg version: `0.2.10`
+- rosdep version: `0.11.4`
+- rosdistro version: `0.4.5`
+- vcstools version: `0.1.38`
+
+
 ## geometry_experimental (jade) - 0.5.13-0
 
 The packages in the `geometry_experimental` repository were released into the `jade` distro by running `/usr/bin/bloom-release geometry_experimental --track jade --rosdistro jade` on `Fri, 04 Mar 2016 20:05:58 -0000`
