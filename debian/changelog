@@ -1,0 +1,31 @@
+ros-kinetic-tf2-eigen (0.5.13-0jessie) jessie; urgency=high
+
+  * Added missing inline
+  * Added unit test
+    - Testing conversion to msg forward/backward
+  * Added eigenTotransform function
+  * Contributors: Davide Tateo, boris-il-forte
+
+ -- Koji Terada <terakoji@gmail.com>  Fri, 04 Mar 2016 08:00:00 -0000
+
+ros-kinetic-tf2-eigen (0.5.12-0jessie) jessie; urgency=high
+
+
+
+ -- Koji Terada <terakoji@gmail.com>  Wed, 05 Aug 2015 07:00:00 -0000
+
+ros-kinetic-tf2-eigen (0.5.11-0jessie) jessie; urgency=high
+
+
+
+ -- Koji Terada <terakoji@gmail.com>  Wed, 22 Apr 2015 07:00:00 -0000
+
+ros-kinetic-tf2-eigen (0.5.10-0jessie) jessie; urgency=high
+
+  * fixing CMakeLists.txt from #97 <https://github.com/ros/geometry_experimental/issues/97>
+  * create tf2_eigen.
+  * Contributors: Tully Foote, koji
+
+ -- Koji Terada <terakoji@gmail.com>  Tue, 21 Apr 2015 07:00:00 -0000
+
+
