@@ -1,3 +1,41 @@
+## geometry2 (jade) - 0.5.14-0
+
+The packages in the `geometry2` repository were released into the `jade` distro by running `/usr/bin/bloom-release geometry2 -t jade -r jade` on `Tue, 17 Jan 2017 02:00:46 -0000`
+
+These packages were released:
+- `geometry2`
+- `geometry_experimental`
+- `tf2`
+- `tf2_bullet`
+- `tf2_eigen`
+- `tf2_geometry_msgs`
+- `tf2_kdl`
+- `tf2_msgs`
+- `tf2_py`
+- `tf2_ros`
+- `tf2_sensor_msgs`
+- `tf2_tools`
+
+These packages were explicitly ignored:
+- `test_tf2`
+
+Version of package(s) in repository `geometry2`:
+
+- upstream repository: https://github.com/ros/geometry_experimental.git
+- release repository: https://github.com/ros-gbp/geometry2-release.git
+- rosdistro version: `0.5.13-0`
+- old version: `0.5.13-0`
+- new version: `0.5.14-0`
+
+Versions of tools used:
+
+- bloom version: `0.5.23`
+- catkin_pkg version: `0.2.10`
+- rosdep version: `0.11.5`
+- rosdistro version: `0.5.0`
+- vcstools version: `0.1.39`
+
+
 ## geometry2 (indigo) - 0.5.14-0
 
 The packages in the `geometry2` repository were released into the `indigo` distro by running `/usr/bin/bloom-release geometry2 -t indigo -r indigo` on `Tue, 17 Jan 2017 01:49:47 -0000`
