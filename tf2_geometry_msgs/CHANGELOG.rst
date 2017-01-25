@@ -2,6 +2,9 @@
 Changelog for package tf2_geometry_msgs
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+0.5.15 (2017-01-24)
+-------------------
+
 0.5.14 (2017-01-16)
 -------------------
 * Add doxygen documentation for tf2_geometry_msgs
