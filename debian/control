@@ -1,0 +1,12 @@
+Source: ros-jade-geometry2
+Section: misc
+Priority: extra
+Maintainer: Tully Foote <tfoote@osrfoundation.org>
+Build-Depends: debhelper (>= 9.0.0), ros-jade-catkin
+Homepage: http://www.ros.org/wiki/geometry2
+Standards-Version: 3.9.2
+
+Package: ros-jade-geometry2
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends}, ros-jade-tf2, ros-jade-tf2-bullet, ros-jade-tf2-eigen, ros-jade-tf2-geometry-msgs, ros-jade-tf2-kdl, ros-jade-tf2-msgs, ros-jade-tf2-py, ros-jade-tf2-ros, ros-jade-tf2-sensor-msgs, ros-jade-tf2-tools
+Description: A metapackage to bring in the default packages second generation Transform Library in ros, tf2.
