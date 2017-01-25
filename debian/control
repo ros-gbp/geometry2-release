@@ -1,0 +1,12 @@
+Source: ros-indigo-geometry2
+Section: misc
+Priority: extra
+Maintainer: Tully Foote <tfoote@osrfoundation.org>
+Build-Depends: debhelper (>= 9.0.0), ros-indigo-catkin
+Homepage: http://www.ros.org/wiki/geometry2
+Standards-Version: 3.9.2
+
+Package: ros-indigo-geometry2
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends}, ros-indigo-tf2, ros-indigo-tf2-bullet, ros-indigo-tf2-eigen, ros-indigo-tf2-geometry-msgs, ros-indigo-tf2-kdl, ros-indigo-tf2-msgs, ros-indigo-tf2-py, ros-indigo-tf2-ros, ros-indigo-tf2-sensor-msgs, ros-indigo-tf2-tools
+Description: A metapackage to bring in the default packages second generation Transform Library in ros, tf2.
