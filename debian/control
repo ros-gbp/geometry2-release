@@ -1,0 +1,12 @@
+Source: ros-lunar-geometry2
+Section: misc
+Priority: extra
+Maintainer: Tully Foote <tfoote@osrfoundation.org>
+Build-Depends: debhelper (>= 9.0.0), ros-lunar-catkin
+Homepage: http://www.ros.org/wiki/geometry2
+Standards-Version: 3.9.2
+
+Package: ros-lunar-geometry2
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends}, ros-lunar-tf2, ros-lunar-tf2-bullet, ros-lunar-tf2-eigen, ros-lunar-tf2-geometry-msgs, ros-lunar-tf2-kdl, ros-lunar-tf2-msgs, ros-lunar-tf2-py, ros-lunar-tf2-ros, ros-lunar-tf2-sensor-msgs, ros-lunar-tf2-tools
+Description: A metapackage to bring in the default packages second generation Transform Library in ros, tf2.
