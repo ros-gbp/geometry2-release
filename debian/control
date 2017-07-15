@@ -1,0 +1,12 @@
+Source: ros-jade-tf2-bullet
+Section: misc
+Priority: extra
+Maintainer: Tully Foote <tfoote@osrfoundation.org>
+Build-Depends: debhelper (>= 9.0.0), libbullet-dev, pkg-config, ros-jade-catkin (>= 0.5.68), ros-jade-geometry-msgs, ros-jade-tf2
+Homepage: http://www.ros.org/wiki/tf2_bullet
+Standards-Version: 3.9.2
+
+Package: ros-jade-tf2-bullet
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends}, libbullet-dev, ros-jade-geometry-msgs, ros-jade-tf2
+Description: tf2_bullet
