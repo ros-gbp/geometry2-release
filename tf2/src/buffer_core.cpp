@@ -37,9 +37,13 @@
 #include <assert.h>
 #include <console_bridge/console.h>
 #include "tf2/LinearMath/Transform.h"
+#include <boost/foreach.hpp>
 
 namespace tf2
 {
+
+// Tolerance for acceptable quaternion normalization
+static double QUATERNION_NORMALIZATION_TOLERANCE = 10e-3;
 
 /** \brief convert Transform msg to Transform */
 void transformMsgToTF2(const geometry_msgs::Transform& msg, tf2::Transform& tf2)
@@ -244,7 +248,7 @@ bool BufferCore::setTransform(const geometry_msgs::TransformStamped& transform_i
   bool valid = std::abs((stripped.transform.rotation.w * stripped.transform.rotation.w
                         + stripped.transform.rotation.x * stripped.transform.rotation.x
                         + stripped.transform.rotation.y * stripped.transform.rotation.y
-                        + stripped.transform.rotation.z * stripped.transform.rotation.z) - 1.0f) < 10e-6;
+                        + stripped.transform.rotation.z * stripped.transform.rotation.z) - 1.0f) < QUATERNION_NORMALIZATION_TOLERANCE;
 
   if (!valid) 
   {
@@ -742,6 +746,21 @@ bool BufferCore::canTransformNoLock(CompactFrameID target_id, CompactFrameID sou
 {
   if (target_id == 0 || source_id == 0)
   {
+    if (error_msg)
+      {
+        if (target_id == 0)
+        {
+          *error_msg += std::string("target_frame: " + lookupFrameString(target_id ) + " does not exist.");
+        }
+        if (source_id == 0)
+        {
+          if (target_id == 0)
+          {
+              *error_msg += std::string(" ");
+          }
+          *error_msg += std::string("source_frame: " + lookupFrameString(source_id) + " " + lookupFrameString(source_id ) + " does not exist.");
+        }
+      }
     return false;
   }
 
@@ -783,6 +802,25 @@ bool BufferCore::canTransform(const std::string& target_frame, const std::string
   CompactFrameID target_id = lookupFrameNumber(target_frame);
   CompactFrameID source_id = lookupFrameNumber(source_frame);
 
+  if (target_id == 0 || source_id == 0)
+  {
+    if (error_msg)
+      {
+        if (target_id == 0)
+        {
+          *error_msg += std::string("canTransform: target_frame " + target_frame + " does not exist.");
+        }
+        if (source_id == 0)
+        {
+          if (target_id == 0)
+          {
+              *error_msg += std::string(" ");
+          }
+          *error_msg += std::string("canTransform: source_frame " + source_frame + " does not exist.");
+        }
+      }
+    return false;
+  }
   return canTransformNoLock(target_id, source_id, time, error_msg);
 }
 
@@ -797,7 +835,39 @@ bool BufferCore::canTransform(const std::string& target_frame, const ros::Time& 
   if (warnFrameId("canTransform argument fixed_frame", fixed_frame))
     return false;
 
-  return canTransform(target_frame, fixed_frame, target_time) && canTransform(fixed_frame, source_frame, source_time, error_msg);
+  boost::mutex::scoped_lock lock(frame_mutex_);
+  CompactFrameID target_id = lookupFrameNumber(target_frame);
+  CompactFrameID source_id = lookupFrameNumber(source_frame);
+  CompactFrameID fixed_id = lookupFrameNumber(fixed_frame);
+
+  if (target_id == 0 || source_id == 0 || fixed_id == 0)
+  {
+    if (error_msg)
+      {
+        if (target_id == 0)
+        {
+          *error_msg += std::string("canTransform: target_frame " + target_frame + " does not exist.");
+        }
+        if (source_id == 0)
+        {
+          if (target_id == 0)
+          {
+              *error_msg += std::string(" ");
+          }
+          *error_msg += std::string("canTransform: source_frame " + source_frame + " does not exist.");
+        }
+        if (source_id == 0)
+        {
+          if (target_id == 0 || source_id == 0)
+          {
+              *error_msg += std::string(" ");
+          }
+          *error_msg += std::string("fixed_frame: " + fixed_frame + "does not exist.");
+        }
+      }
+    return false;
+  }
+  return canTransformNoLock(target_id, fixed_id, target_time, error_msg) && canTransformNoLock(fixed_id, source_id, source_time, error_msg);
 }
 
 
@@ -1325,6 +1395,11 @@ void BufferCore::testTransformableRequests()
 {
   boost::mutex::scoped_lock lock(transformable_requests_mutex_);
   V_TransformableRequest::iterator it = transformable_requests_.begin();
+
+  typedef boost::tuple<TransformableCallback&, TransformableRequestHandle, std::string,
+                       std::string, ros::Time&, TransformableResult&> TransformableTuple;
+  std::vector<TransformableTuple> transformables;
+
   for (; it != transformable_requests_.end();)
   {
     TransformableRequest& req = *it;
@@ -1364,8 +1439,12 @@ void BufferCore::testTransformableRequests()
         M_TransformableCallback::iterator it = transformable_callbacks_.find(req.cb_handle);
         if (it != transformable_callbacks_.end())
         {
-          const TransformableCallback& cb = it->second;
-          cb(req.request_handle, lookupFrameString(req.target_id), lookupFrameString(req.source_id), req.time, result);
+          transformables.push_back(boost::make_tuple(boost::ref(it->second),
+                                                     req.request_handle,
+                                                     lookupFrameString(req.target_id),
+                                                     lookupFrameString(req.source_id),
+                                                     boost::ref(req.time),
+                                                     boost::ref(result)));
         }
       }
 
@@ -1382,8 +1461,13 @@ void BufferCore::testTransformableRequests()
     }
   }
 
-  // unlock before allowing possible user callbacks to avoid potential detadlock (#91)
+  // unlock before allowing possible user callbacks to avoid potential deadlock (#91)
   lock.unlock();
+
+  BOOST_FOREACH (TransformableTuple tt, transformables)
+  {
+    tt.get<0>()(tt.get<1>(), tt.get<2>(), tt.get<3>(), tt.get<4>(), tt.get<5>());
+  }
 
   // Backwards compatability callback for tf
   _transforms_changed_();
