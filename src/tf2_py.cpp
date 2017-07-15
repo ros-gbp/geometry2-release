@@ -105,7 +105,9 @@ static PyObject *transform_converter(const geometry_msgs::TransformStamped* tran
   PyObject_SetAttrString(pheader, "stamp", time_obj);
   Py_DECREF(time_obj);
 
-  PyObject_SetAttrString(pheader, "frame_id", stringToPython(transform->header.frame_id));
+  PyObject *frame_id = stringToPython(transform->header.frame_id);
+  PyObject_SetAttrString(pheader, "frame_id", frame_id);
+  Py_DECREF(frame_id);
   Py_DECREF(pheader);
 
   PyObject *ptransform = PyObject_GetAttrString(pinst, "transform");
@@ -113,17 +115,33 @@ static PyObject *transform_converter(const geometry_msgs::TransformStamped* tran
   PyObject *protation = PyObject_GetAttrString(ptransform, "rotation");
   Py_DECREF(ptransform);
 
-  PyObject_SetAttrString(pinst, "child_frame_id", stringToPython(transform->child_frame_id));
+  PyObject *child_frame_id = stringToPython(transform->child_frame_id);
+  PyObject_SetAttrString(pinst, "child_frame_id", child_frame_id);
+  Py_DECREF(child_frame_id);
 
-  PyObject_SetAttrString(ptranslation, "x", PyFloat_FromDouble(transform->transform.translation.x));
-  PyObject_SetAttrString(ptranslation, "y", PyFloat_FromDouble(transform->transform.translation.y));
-  PyObject_SetAttrString(ptranslation, "z", PyFloat_FromDouble(transform->transform.translation.z));
+  PyObject *trans_x = PyFloat_FromDouble(transform->transform.translation.x);
+  PyObject *trans_y = PyFloat_FromDouble(transform->transform.translation.y);
+  PyObject *trans_z = PyFloat_FromDouble(transform->transform.translation.z);
+  PyObject_SetAttrString(ptranslation, "x", trans_x);
+  PyObject_SetAttrString(ptranslation, "y", trans_y);
+  PyObject_SetAttrString(ptranslation, "z", trans_z);
+  Py_DECREF(trans_x);
+  Py_DECREF(trans_y);
+  Py_DECREF(trans_z);
   Py_DECREF(ptranslation);
 
-  PyObject_SetAttrString(protation, "x", PyFloat_FromDouble(transform->transform.rotation.x));
-  PyObject_SetAttrString(protation, "y", PyFloat_FromDouble(transform->transform.rotation.y));
-  PyObject_SetAttrString(protation, "z", PyFloat_FromDouble(transform->transform.rotation.z));
-  PyObject_SetAttrString(protation, "w", PyFloat_FromDouble(transform->transform.rotation.w));
+  PyObject *rot_x = PyFloat_FromDouble(transform->transform.rotation.x);
+  PyObject *rot_y = PyFloat_FromDouble(transform->transform.rotation.y);
+  PyObject *rot_z = PyFloat_FromDouble(transform->transform.rotation.z);
+  PyObject *rot_w = PyFloat_FromDouble(transform->transform.rotation.w);
+  PyObject_SetAttrString(protation, "x", rot_x);
+  PyObject_SetAttrString(protation, "y", rot_y);
+  PyObject_SetAttrString(protation, "z", rot_z);
+  PyObject_SetAttrString(protation, "w", rot_w);
+  Py_DECREF(rot_x);
+  Py_DECREF(rot_y);
+  Py_DECREF(rot_z);
+  Py_DECREF(rot_w);
   Py_DECREF(protation);
 
   return pinst;
@@ -228,20 +246,19 @@ static PyObject *canTransformFullCore(PyObject *self, PyObject *args, PyObject *
   return Py_BuildValue("bs", can_transform, error_msg.c_str());
 }
 
-/* Debugging stuff that may need to be implemented later
 static PyObject *asListOfStrings(std::vector< std::string > los)
 {
   PyObject *r = PyList_New(los.size());
   size_t i;
   for (i = 0; i < los.size(); i++) {
-    PyList_SetItem(r, i, toPythonString(los[i]));
+    PyList_SetItem(r, i, stringToPython(los[i]));
   }
   return r;
 }
 
-static PyObject *chain(PyObject *self, PyObject *args, PyObject *kw)
+static PyObject *_chain(PyObject *self, PyObject *args, PyObject *kw)
 {
-  tf::Transformer *t = ((transformer_t*)self)->t;
+  tf2::BufferCore *bc = ((buffer_core_t*)self)->bc;
   char *target_frame, *source_frame, *fixed_frame;
   ros::Time target_time, source_time;
   std::vector< std::string > output;
@@ -257,10 +274,9 @@ static PyObject *chain(PyObject *self, PyObject *args, PyObject *kw)
                         &fixed_frame))
     return NULL;
 
-  WRAP(t->chainAsVector(target_frame, target_time, source_frame, source_time, fixed_frame, output));
+  WRAP(bc->_chainAsVector(target_frame, target_time, source_frame, source_time, fixed_frame, output));
   return asListOfStrings(output);
 }
-*/
 
 static PyObject *getLatestCommonTime(PyObject *self, PyObject *args)
 {
@@ -379,13 +395,28 @@ static PyObject *lookupTwistFullCore(PyObject *self, PyObject *args)
 static inline int checkTranslationType(PyObject* o)
 {
   PyTypeObject *translation_type = (PyTypeObject*) PyObject_GetAttrString(pModulegeometrymsgs, "Vector3");
-  return PyObject_TypeCheck(o, translation_type);
+  int type_check = PyObject_TypeCheck(o, translation_type);
+  int attr_check = PyObject_HasAttrString(o, "x") &&
+                   PyObject_HasAttrString(o, "y") &&
+                   PyObject_HasAttrString(o, "z");
+  if (!type_check) {
+    PyErr_WarnEx(PyExc_UserWarning, "translation should be of type Vector3", 1);
+  }
+  return attr_check;
 }
 
 static inline int checkRotationType(PyObject* o)
 {
   PyTypeObject *rotation_type = (PyTypeObject*) PyObject_GetAttrString(pModulegeometrymsgs, "Quaternion");
-  return PyObject_TypeCheck(o, rotation_type);
+  int type_check = PyObject_TypeCheck(o, rotation_type);
+  int attr_check = PyObject_HasAttrString(o, "w") &&
+                   PyObject_HasAttrString(o, "x") &&
+                   PyObject_HasAttrString(o, "y") &&
+                   PyObject_HasAttrString(o, "z");
+  if (!type_check) {
+    PyErr_WarnEx(PyExc_UserWarning, "translation should be of type Quaternion", 1);
+  }
+  return attr_check;
 }
 
 static PyObject *setTransform(PyObject *self, PyObject *args)
@@ -408,7 +439,7 @@ static PyObject *setTransform(PyObject *self, PyObject *args)
 
   PyObject *translation = pythonBorrowAttrString(mtransform, "translation");
   if (!checkTranslationType(translation)) {
-    PyErr_SetString(PyExc_TypeError, "transform.translation must be of type Vector3");
+    PyErr_SetString(PyExc_TypeError, "transform.translation must have members x, y, z");
     return NULL;
   }
 
@@ -418,7 +449,7 @@ static PyObject *setTransform(PyObject *self, PyObject *args)
 
   PyObject *rotation = pythonBorrowAttrString(mtransform, "rotation");
   if (!checkRotationType(rotation)) {
-    PyErr_SetString(PyExc_TypeError, "transform.rotation must be of type Quaternion");
+    PyErr_SetString(PyExc_TypeError, "transform.rotation must have members w, x, y, z");
     return NULL;
   }
 
@@ -481,24 +512,33 @@ static PyObject *clear(PyObject *self, PyObject *args)
   Py_RETURN_NONE;
 }
 
-/* May come back eventually, but not in public api right now
-static PyObject *frameExists(PyObject *self, PyObject *args)
+static PyObject *_frameExists(PyObject *self, PyObject *args)
 {
-  tf::Transformer *t = ((transformer_t*)self)->t;
+  tf2::BufferCore *bc = ((buffer_core_t*)self)->bc;
   char *frame_id_str;
   if (!PyArg_ParseTuple(args, "s", &frame_id_str))
     return NULL;
-  return PyBool_FromLong(t->frameExists(frame_id_str));
+  return PyBool_FromLong(bc->_frameExists(frame_id_str));
 }
 
-static PyObject *getFrameStrings(PyObject *self, PyObject *args)
+static PyObject *_getFrameStrings(PyObject *self, PyObject *args)
 {
-  tf::Transformer *t = ((transformer_t*)self)->t;
+  tf2::BufferCore *bc = ((buffer_core_t*)self)->bc;
   std::vector< std::string > ids;
-  t->getFrameStrings(ids);
+  bc->_getFrameStrings(ids);
   return asListOfStrings(ids);
 }
-*/
+
+static PyObject *_allFramesAsDot(PyObject *self, PyObject *args, PyObject *kw)
+{
+  tf2::BufferCore *bc = ((buffer_core_t*)self)->bc;
+  static const char *keywords[] = { "time", NULL };
+  ros::Time time;
+  if (!PyArg_ParseTupleAndKeywords(args, kw, "|O&", (char**)keywords, rostime_converter, &time))
+    return NULL;
+  return PyString_FromString(bc->_allFramesAsDot(time.toSec()).c_str());
+}
+
 
 static struct PyMethodDef buffer_core_methods[] =
 {
@@ -508,10 +548,11 @@ static struct PyMethodDef buffer_core_methods[] =
   {"set_transform_static", setTransformStatic, METH_VARARGS},
   {"can_transform_core", (PyCFunction)canTransformCore, METH_KEYWORDS},
   {"can_transform_full_core", (PyCFunction)canTransformFullCore, METH_KEYWORDS},
-  //{"chain", (PyCFunction)chain, METH_KEYWORDS},
+  {"_chain", (PyCFunction)_chain, METH_KEYWORDS},
   {"clear", (PyCFunction)clear, METH_KEYWORDS},
-  //{"frameExists", (PyCFunction)frameExists, METH_VARARGS},
-  //{"getFrameStrings", (PyCFunction)getFrameStrings, METH_VARARGS},
+  {"_frameExists", (PyCFunction)_frameExists, METH_VARARGS},
+  {"_getFrameStrings", (PyCFunction)_getFrameStrings, METH_VARARGS},
+  {"_allFramesAsDot", (PyCFunction)_allFramesAsDot, METH_KEYWORDS},
   {"get_latest_common_time", (PyCFunction)getLatestCommonTime, METH_VARARGS},
   {"lookup_transform_core", (PyCFunction)lookupTransformCore, METH_KEYWORDS},
   {"lookup_transform_full_core", (PyCFunction)lookupTransformFullCore, METH_KEYWORDS},
