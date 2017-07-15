@@ -1,0 +1,12 @@
+Source: ros-kinetic-tf2-ros
+Section: misc
+Priority: extra
+Maintainer: Tully Foote <tfoote@osrfoundation.org>
+Build-Depends: debhelper (>= 9.0.0), ros-kinetic-actionlib, ros-kinetic-actionlib-msgs, ros-kinetic-catkin (>= 0.5.68), ros-kinetic-geometry-msgs, ros-kinetic-message-filters (>= 1.11.1), ros-kinetic-roscpp, ros-kinetic-rosgraph, ros-kinetic-rospy, ros-kinetic-rostest, ros-kinetic-std-msgs, ros-kinetic-tf2, ros-kinetic-tf2-msgs, ros-kinetic-tf2-py, ros-kinetic-xmlrpcpp
+Homepage: http://www.ros.org/wiki/tf2_ros
+Standards-Version: 3.9.2
+
+Package: ros-kinetic-tf2-ros
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends}, ros-kinetic-actionlib, ros-kinetic-actionlib-msgs, ros-kinetic-geometry-msgs, ros-kinetic-message-filters, ros-kinetic-roscpp, ros-kinetic-rosgraph, ros-kinetic-rospy, ros-kinetic-std-msgs, ros-kinetic-tf2, ros-kinetic-tf2-msgs, ros-kinetic-tf2-py, ros-kinetic-xmlrpcpp
+Description: This package contains the ROS bindings for the tf2 library, for both Python and C++.
