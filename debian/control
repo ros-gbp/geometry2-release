@@ -1,13 +1,13 @@
-Source: ros-kinetic-tf2-sensor-msgs
+Source: ros-hotdog-tf2-sensor-msgs
 Section: misc
 Priority: extra
 Maintainer: Vincent Rabaud <vincent.rabaud@gmail.com>
-Build-Depends: debhelper (>= 9.0.0), libeigen3-dev, ros-kinetic-catkin (>= 0.5.6), ros-kinetic-cmake-modules, ros-kinetic-rostest, ros-kinetic-sensor-msgs, ros-kinetic-tf2, ros-kinetic-tf2-ros
+Build-Depends: debhelper (>= 9.0.0), libeigen3-dev, ros-hotdog-catkin (>= 0.5.6), ros-hotdog-cmake-modules, ros-hotdog-rostest, ros-hotdog-sensor-msgs, ros-hotdog-tf2, ros-hotdog-tf2-ros
 Homepage: http://www.ros.org/wiki/tf2_ros
 Standards-Version: 3.9.2
 
-Package: ros-kinetic-tf2-sensor-msgs
+Package: ros-hotdog-tf2-sensor-msgs
 Architecture: any
-Depends: ${shlibs:Depends}, ${misc:Depends}, libeigen3-dev, ros-kinetic-cmake-modules, ros-kinetic-python-orocos-kdl, ros-kinetic-sensor-msgs, ros-kinetic-tf2, ros-kinetic-tf2-ros
+Depends: ${shlibs:Depends}, ${misc:Depends}, libeigen3-dev, ros-hotdog-cmake-modules, ros-hotdog-python-orocos-kdl, ros-hotdog-sensor-msgs, ros-hotdog-tf2, ros-hotdog-tf2-ros
 Description: Small lib to transform sensor_msgs with tf.
  Most notably, PointCloud2

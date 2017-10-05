@@ -1,16 +1,16 @@
-ros-kinetic-tf2-sensor-msgs (0.5.15-0xenial) xenial; urgency=high
+ros-hotdog-tf2-sensor-msgs (0.5.15-0xenial) xenial; urgency=high
 
 
 
  -- Vincent Rabaud <vincent.rabaud@gmail.com>  Tue, 24 Jan 2017 08:00:00 -0000
 
-ros-kinetic-tf2-sensor-msgs (0.5.14-0xenial) xenial; urgency=high
+ros-hotdog-tf2-sensor-msgs (0.5.14-0xenial) xenial; urgency=high
 
 
 
  -- Vincent Rabaud <vincent.rabaud@gmail.com>  Mon, 16 Jan 2017 08:00:00 -0000
 
-ros-kinetic-tf2-sensor-msgs (0.5.13-0xenial) xenial; urgency=high
+ros-hotdog-tf2-sensor-msgs (0.5.13-0xenial) xenial; urgency=high
 
   * add missing Python runtime dependency
   * fix wrong comment
@@ -25,31 +25,31 @@ ros-kinetic-tf2-sensor-msgs (0.5.13-0xenial) xenial; urgency=high
 
  -- Vincent Rabaud <vincent.rabaud@gmail.com>  Fri, 04 Mar 2016 08:00:00 -0000
 
-ros-kinetic-tf2-sensor-msgs (0.5.12-0xenial) xenial; urgency=high
+ros-hotdog-tf2-sensor-msgs (0.5.12-0xenial) xenial; urgency=high
 
 
 
  -- Vincent Rabaud <vincent.rabaud@gmail.com>  Wed, 05 Aug 2015 07:00:00 -0000
 
-ros-kinetic-tf2-sensor-msgs (0.5.11-0xenial) xenial; urgency=high
+ros-hotdog-tf2-sensor-msgs (0.5.11-0xenial) xenial; urgency=high
 
 
 
  -- Vincent Rabaud <vincent.rabaud@gmail.com>  Wed, 22 Apr 2015 07:00:00 -0000
 
-ros-kinetic-tf2-sensor-msgs (0.5.10-0xenial) xenial; urgency=high
+ros-hotdog-tf2-sensor-msgs (0.5.10-0xenial) xenial; urgency=high
 
 
 
  -- Vincent Rabaud <vincent.rabaud@gmail.com>  Tue, 21 Apr 2015 07:00:00 -0000
 
-ros-kinetic-tf2-sensor-msgs (0.5.9-0xenial) xenial; urgency=high
+ros-hotdog-tf2-sensor-msgs (0.5.9-0xenial) xenial; urgency=high
 
 
 
  -- Vincent Rabaud <vincent.rabaud@gmail.com>  Wed, 25 Mar 2015 07:00:00 -0000
 
-ros-kinetic-tf2-sensor-msgs (0.5.8-0xenial) xenial; urgency=high
+ros-hotdog-tf2-sensor-msgs (0.5.8-0xenial) xenial; urgency=high
 
   * ODR violation fixes and more conversions
   * Fix keeping original pointcloud header in transformed pointcloud
@@ -57,7 +57,7 @@ ros-kinetic-tf2-sensor-msgs (0.5.8-0xenial) xenial; urgency=high
 
  -- Vincent Rabaud <vincent.rabaud@gmail.com>  Tue, 17 Mar 2015 07:00:00 -0000
 
-ros-kinetic-tf2-sensor-msgs (0.5.7-0xenial) xenial; urgency=high
+ros-hotdog-tf2-sensor-msgs (0.5.7-0xenial) xenial; urgency=high
 
   * add support for transforming sensor_msgs::PointCloud2
   * Contributors: Vincent Rabaud
