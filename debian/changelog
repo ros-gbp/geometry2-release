@@ -1,11 +1,11 @@
-ros-kinetic-tf2-eigen (0.5.15-0xenial) xenial; urgency=high
+ros-hotdog-tf2-eigen (0.5.15-0xenial) xenial; urgency=high
 
   * fixup #186 <https://github.com/ros/geometry2/issues/186>: inline template specializations (#200 <https://github.com/ros/geometry2/issues/200>)
   * Contributors: Robert Haschke
 
  -- Koji Terada <terakoji@gmail.com>  Tue, 24 Jan 2017 08:00:00 -0000
 
-ros-kinetic-tf2-eigen (0.5.14-0xenial) xenial; urgency=high
+ros-hotdog-tf2-eigen (0.5.14-0xenial) xenial; urgency=high
 
   * Add tf2_eigen conversions for Pose and Point (not stamped) (#186 <https://github.com/ros/geometry2/issues/186>)
     * tf2_eigen: added conversions for Point msg type (not timestamped) to Eigen::Vector3d
@@ -23,7 +23,7 @@ ros-kinetic-tf2-eigen (0.5.14-0xenial) xenial; urgency=high
 
  -- Koji Terada <terakoji@gmail.com>  Mon, 16 Jan 2017 08:00:00 -0000
 
-ros-kinetic-tf2-eigen (0.5.13-0xenial) xenial; urgency=high
+ros-hotdog-tf2-eigen (0.5.13-0xenial) xenial; urgency=high
 
   * Added missing inline
   * Added unit test
@@ -33,19 +33,19 @@ ros-kinetic-tf2-eigen (0.5.13-0xenial) xenial; urgency=high
 
  -- Koji Terada <terakoji@gmail.com>  Fri, 04 Mar 2016 08:00:00 -0000
 
-ros-kinetic-tf2-eigen (0.5.12-0xenial) xenial; urgency=high
+ros-hotdog-tf2-eigen (0.5.12-0xenial) xenial; urgency=high
 
 
 
  -- Koji Terada <terakoji@gmail.com>  Wed, 05 Aug 2015 07:00:00 -0000
 
-ros-kinetic-tf2-eigen (0.5.11-0xenial) xenial; urgency=high
+ros-hotdog-tf2-eigen (0.5.11-0xenial) xenial; urgency=high
 
 
 
  -- Koji Terada <terakoji@gmail.com>  Wed, 22 Apr 2015 07:00:00 -0000
 
-ros-kinetic-tf2-eigen (0.5.10-0xenial) xenial; urgency=high
+ros-hotdog-tf2-eigen (0.5.10-0xenial) xenial; urgency=high
 
   * fixing CMakeLists.txt from #97 <https://github.com/ros/geometry_experimental/issues/97>
   * create tf2_eigen.
