@@ -1,0 +1,26 @@
+ros-kinetic-geometry2 (0.5.17-0jessie) jessie; urgency=high
+
+
+
+ -- Tully Foote <tfoote@osrfoundation.org>  Mon, 01 Jan 2018 08:00:00 -0000
+
+ros-kinetic-geometry2 (0.5.16-0jessie) jessie; urgency=high
+
+
+
+ -- Tully Foote <tfoote@osrfoundation.org>  Fri, 14 Jul 2017 07:00:00 -0000
+
+ros-kinetic-geometry2 (0.5.15-0jessie) jessie; urgency=high
+
+
+
+ -- Tully Foote <tfoote@osrfoundation.org>  Tue, 24 Jan 2017 08:00:00 -0000
+
+ros-kinetic-geometry2 (0.5.14-0jessie) jessie; urgency=high
+
+  * create geometry2 metapackage and make geometry_experimental depend on it for clarity of reverse dependency walking.
+  * Contributors: Tully Foote
+
+ -- Tully Foote <tfoote@osrfoundation.org>  Mon, 16 Jan 2017 08:00:00 -0000
+
+
