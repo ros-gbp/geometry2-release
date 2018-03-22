@@ -1,0 +1,32 @@
+ros-melodic-geometry2 (0.6.0-0stretch) stretch; urgency=high
+
+
+
+ -- Tully Foote <tfoote@osrfoundation.org>  Wed, 21 Mar 2018 07:00:00 -0000
+
+ros-melodic-geometry2 (0.5.17-0stretch) stretch; urgency=high
+
+
+
+ -- Tully Foote <tfoote@osrfoundation.org>  Mon, 01 Jan 2018 08:00:00 -0000
+
+ros-melodic-geometry2 (0.5.16-0stretch) stretch; urgency=high
+
+
+
+ -- Tully Foote <tfoote@osrfoundation.org>  Fri, 14 Jul 2017 07:00:00 -0000
+
+ros-melodic-geometry2 (0.5.15-0stretch) stretch; urgency=high
+
+
+
+ -- Tully Foote <tfoote@osrfoundation.org>  Tue, 24 Jan 2017 08:00:00 -0000
+
+ros-melodic-geometry2 (0.5.14-0stretch) stretch; urgency=high
+
+  * create geometry2 metapackage and make geometry_experimental depend on it for clarity of reverse dependency walking.
+  * Contributors: Tully Foote
+
+ -- Tully Foote <tfoote@osrfoundation.org>  Mon, 16 Jan 2017 08:00:00 -0000
+
+
