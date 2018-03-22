@@ -2,6 +2,9 @@
 Changelog for package tf2_geometry_msgs
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+0.6.1 (2018-03-21)
+------------------
+
 0.6.0 (2018-03-21)
 ------------------
 * Boilerplate for Sphinx (`#284 <https://github.com/ros/geometry2/issues/284>`_)
