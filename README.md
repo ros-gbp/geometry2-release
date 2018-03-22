@@ -1,3 +1,41 @@
+## geometry2 (melodic) - 0.6.1-0
+
+The packages in the `geometry2` repository were released into the `melodic` distro by running `/usr/bin/bloom-release -t melodic -r melodic geometry2` on `Thu, 22 Mar 2018 01:49:12 -0000`
+
+These packages were released:
+- `geometry2`
+- `tf2`
+- `tf2_bullet`
+- `tf2_eigen`
+- `tf2_geometry_msgs`
+- `tf2_kdl`
+- `tf2_msgs`
+- `tf2_py`
+- `tf2_ros`
+- `tf2_sensor_msgs`
+- `tf2_tools`
+
+These packages were explicitly ignored:
+- `geometry_experimental`
+- `test_tf2`
+
+Version of package(s) in repository `geometry2`:
+
+- upstream repository: https://github.com/ros/geometry_experimental.git
+- release repository: https://github.com/ros-gbp/geometry2-release.git
+- rosdistro version: `0.5.17-0`
+- old version: `0.6.0-0`
+- new version: `0.6.1-0`
+
+Versions of tools used:
+
+- bloom version: `0.6.4`
+- catkin_pkg version: `0.3.9`
+- rosdep version: `0.11.8`
+- rosdistro version: `0.6.3`
+- vcstools version: `0.1.39`
+
+
 ## geometry2 (melodic) - 0.6.0-0
 
 The packages in the `geometry2` repository were released into the `melodic` distro by running `/usr/bin/bloom-release -t melodic -r melodic geometry2 --edit` on `Thu, 22 Mar 2018 01:18:18 -0000`
