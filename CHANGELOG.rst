@@ -2,6 +2,9 @@
 Changelog for package tf2
 ^^^^^^^^^^^^^^^^^^^^^^^^^
 
+0.6.2 (2018-05-02)
+------------------
+
 0.6.1 (2018-03-21)
 ------------------
 * Replaced deprecated console_bridge macro calls (tests)
