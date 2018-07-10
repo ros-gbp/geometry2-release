@@ -2,23 +2,10 @@
 Changelog for package tf2_ros
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-0.6.3 (2018-07-09)
-------------------
-
-0.6.2 (2018-05-02)
-------------------
-* update buffer_server_name (`#296 <https://github.com/ros/geometry2/issues/296>`_)
-  * use nodename as namespace
-  * Update `#209 <https://github.com/ros/geometry2/issues/209>`_ to provide backwards compatibility.
-* Contributors: Jihoon Lee, Tully Foote
-
-0.6.1 (2018-03-21)
-------------------
-
-0.6.0 (2018-03-21)
-------------------
-* tf2_ros::Buffer: canTransform can now deal with timeouts smaller than 10ms by using the hunderdth of the timeout for sleeping (`#286 <https://github.com/ros/geometry2/issues/286>`_)
-* More spinning to make sure the message gets through for `#129 <https://github.com/ros/geometry2/issues/129>`_ `#283 <https://github.com/ros/geometry2/issues/283>`_
+0.5.18 (2018-07-10)
+-------------------
+* tf2_ros::Buffer: canTransform can now deal with timeouts smaller than… (`#286 <https://github.com/ros/geometry2/issues/286>`_)
+* More spinning to make sure the message gets through for `#129 <https://github.com/ros/geometry2/issues/129>`_
 * Contributors: Tully Foote, cwecht
 
 0.5.17 (2018-01-01)

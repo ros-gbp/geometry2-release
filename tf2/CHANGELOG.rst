@@ -2,24 +2,11 @@
 Changelog for package tf2
 ^^^^^^^^^^^^^^^^^^^^^^^^^
 
-0.6.3 (2018-07-09)
-------------------
+0.5.18 (2018-07-10)
+-------------------
 * preserve constness of const argument to avoid warnings (`#307 <https://github.com/ros/geometry2/issues/307>`_)
 * Change comment style for unused doxygen (`#297 <https://github.com/ros/geometry2/issues/297>`_)
 * Contributors: Jacob Perron, Tully Foote
-
-0.6.2 (2018-05-02)
-------------------
-
-0.6.1 (2018-03-21)
-------------------
-* Replaced deprecated console_bridge macro calls (tests)
-* Contributors: Johannes Meyer, Tully Foote
-
-0.6.0 (2018-03-21)
-------------------
-* Replaced deprecated log macro calls
-* Contributors: Tim Rakowski, Tully Foote
 
 0.5.17 (2018-01-01)
 -------------------
