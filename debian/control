@@ -1,0 +1,12 @@
+Source: ros-melodic-tf2-msgs
+Section: misc
+Priority: extra
+Maintainer: Tully Foote <tfoote@osrfoundation.org>
+Build-Depends: debhelper (>= 9.0.0), ros-melodic-actionlib-msgs, ros-melodic-catkin, ros-melodic-geometry-msgs, ros-melodic-message-generation
+Homepage: http://www.ros.org/wiki/tf2_msgs
+Standards-Version: 3.9.2
+
+Package: ros-melodic-tf2-msgs
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends}, ros-melodic-actionlib-msgs, ros-melodic-geometry-msgs, ros-melodic-message-generation
+Description: tf2_msgs
