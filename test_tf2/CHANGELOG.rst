@@ -2,6 +2,9 @@
 Changelog for package test_tf2
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+0.6.4 (2018-11-06)
+------------------
+
 0.6.3 (2018-07-09)
 ------------------
 * use correct unit test for test_tf2_bullet (`#301 <https://github.com/ros/geometry2/issues/301>`_)
