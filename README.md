@@ -1,3 +1,41 @@
+## geometry2 (lunar) - 0.5.20-0
+
+The packages in the `geometry2` repository were released into the `lunar` distro by running `/usr/bin/bloom-release -t lunar -r lunar geometry2` on `Fri, 16 Nov 2018 23:59:50 -0000`
+
+These packages were released:
+- `geometry2`
+- `tf2`
+- `tf2_bullet`
+- `tf2_eigen`
+- `tf2_geometry_msgs`
+- `tf2_kdl`
+- `tf2_msgs`
+- `tf2_py`
+- `tf2_ros`
+- `tf2_sensor_msgs`
+- `tf2_tools`
+
+These packages were explicitly ignored:
+- `geometry_experimental`
+- `test_tf2`
+
+Version of package(s) in repository `geometry2`:
+
+- upstream repository: https://github.com/ros/geometry_experimental.git
+- release repository: https://github.com/ros-gbp/geometry2-release.git
+- rosdistro version: `0.5.19-0`
+- old version: `0.5.19-0`
+- new version: `0.5.20-0`
+
+Versions of tools used:
+
+- bloom version: `0.6.8`
+- catkin_pkg version: `0.4.9`
+- rosdep version: `0.13.0`
+- rosdistro version: `0.7.0`
+- vcstools version: `0.1.40`
+
+
 ## geometry2 (melodic) - 0.6.5-0
 
 The packages in the `geometry2` repository were released into the `melodic` distro by running `/usr/bin/bloom-release -t melodic -r melodic geometry2` on `Fri, 16 Nov 2018 23:51:27 -0000`
