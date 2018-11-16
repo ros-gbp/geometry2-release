@@ -2,35 +2,25 @@
 Changelog for package tf2_geometry_msgs
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-0.6.5 (2018-11-16)
-------------------
-* Fix python3 import error
-* Contributors: Timon Engelke
+0.5.20 (2018-11-16)
+-------------------
 
-0.6.4 (2018-11-06)
-------------------
-
-0.6.3 (2018-07-09)
-------------------
-* Changed access to Vector to prevent memory leak (`#305 <https://github.com/ros/geometry2/issues/305>`_)
+0.5.19 (2018-11-06)
+-------------------
+* Use boost::array insted of std:array
+  ... for older C++ version
 * Added WrenchStamped transformation (`#302 <https://github.com/ros/geometry2/issues/302>`_)
-* Contributors: Denis Štogl, Markus Grimm
+  * Added doTransformation for geometry_msgs/Wrench
+  * Added python implementation of Wrench transform
+* Contributors: Denis Štogl
 
-0.6.2 (2018-05-02)
-------------------
-
-0.6.1 (2018-03-21)
-------------------
-
-0.6.0 (2018-03-21)
-------------------
+0.5.18 (2018-07-10)
+-------------------
+* Changed access to Vector to prevent memory leak (`#305 <https://github.com/ros/geometry2/issues/305>`_)
 * Boilerplate for Sphinx (`#284 <https://github.com/ros/geometry2/issues/284>`_)
-  Fixes `#264 <https://github.com/ros/geometry2/issues/264>`_
-* tf2_geometry_msgs added doTransform implementations for not stamped types (`#262 <https://github.com/ros/geometry2/issues/262>`_)
-  * tf2_geometry_msgs added doTransform implementations for not stamped Point, Quaterion, Pose and Vector3 message types
+* tf2_geometry_msgs added doTransform implementations for not stamped P… (`#262 <https://github.com/ros/geometry2/issues/262>`_)
 * New functionality to transform PoseWithCovarianceStamped messages. (`#282 <https://github.com/ros/geometry2/issues/282>`_)
-  * New functionality to transform PoseWithCovarianceStamped messages.
-* Contributors: Blake Anderson, Tully Foote, cwecht
+* Contributors: Blake Anderson, Markus Grimm, Tully Foote, cwecht
 
 0.5.17 (2018-01-01)
 -------------------

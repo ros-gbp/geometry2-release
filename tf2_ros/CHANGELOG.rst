@@ -2,41 +2,27 @@
 Changelog for package tf2_ros
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-0.6.5 (2018-11-16)
-------------------
+0.5.20 (2018-11-16)
+-------------------
 * Protect the time reset logic from a race condition.
   Fixes `#341 <https://github.com/ros/geometry2/issues/341>`_
   This could incorrectly trigger a buffer clear if two concurrent callbacks were invoked.
 * Contributors: Tully Foote
 
-0.6.4 (2018-11-06)
-------------------
+0.5.19 (2018-11-06)
+-------------------
 * fix(buffer-client): Use actionlib api for obtaining result
   Use the API provided by actionlib for waiting for result. This will improve the response time and prevent problems with custom solutions (see `#178 <https://github.com/ros/geometry2/issues/178>`_). This change makes constructor parameter check_frequency obsolute and deprecates it.
 * Add check to buffer_client.py to make sure result is available
   Related issue: `#178 <https://github.com/ros/geometry2/issues/178>`_
 * Add check to reset buffer when rostime goes backwards
 * Fixed the value of expected_success_count\_
-* Added a tf2_ros message filter unittest with multiple target frames and non-zero time tolerance
 * Contributors: Ewoud Pool, Jørgen Borgesen, Stephen Williams
 
-0.6.3 (2018-07-09)
-------------------
-
-0.6.2 (2018-05-02)
-------------------
-* update buffer_server_name (`#296 <https://github.com/ros/geometry2/issues/296>`_)
-  * use nodename as namespace
-  * Update `#209 <https://github.com/ros/geometry2/issues/209>`_ to provide backwards compatibility.
-* Contributors: Jihoon Lee, Tully Foote
-
-0.6.1 (2018-03-21)
-------------------
-
-0.6.0 (2018-03-21)
-------------------
-* tf2_ros::Buffer: canTransform can now deal with timeouts smaller than 10ms by using the hunderdth of the timeout for sleeping (`#286 <https://github.com/ros/geometry2/issues/286>`_)
-* More spinning to make sure the message gets through for `#129 <https://github.com/ros/geometry2/issues/129>`_ `#283 <https://github.com/ros/geometry2/issues/283>`_
+0.5.18 (2018-07-10)
+-------------------
+* tf2_ros::Buffer: canTransform can now deal with timeouts smaller than… (`#286 <https://github.com/ros/geometry2/issues/286>`_)
+* More spinning to make sure the message gets through for `#129 <https://github.com/ros/geometry2/issues/129>`_
 * Contributors: Tully Foote, cwecht
 
 0.5.17 (2018-01-01)
