@@ -29,7 +29,6 @@
 
 from __future__ import print_function
 
-import roslib; roslib.load_manifest('tf2_ros')
 import rospy
 import tf2_py as tf2
 import tf2_ros
@@ -65,7 +64,7 @@ class BufferInterface:
         do_transform = self.registration.get(type(object_stamped))
         res = do_transform(object_stamped, self.lookup_transform(target_frame, object_stamped.header.frame_id,
                                                                  object_stamped.header.stamp, timeout))
-        if new_type == None:
+        if not new_type:
             return res
 
         return convert(res, new_type)
@@ -95,7 +94,7 @@ class BufferInterface:
         res = do_transform(object_stamped, self.lookup_transform_full(target_frame, target_time,
                                                                      object_stamped.header.frame_id, object_stamped.header.stamp, 
                                                                      fixed_frame, timeout))
-        if new_type == None:
+        if not new_type:
             return res
 
         return convert(res, new_type)
