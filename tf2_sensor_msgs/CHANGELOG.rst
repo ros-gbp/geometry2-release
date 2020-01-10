@@ -2,6 +2,12 @@
 Changelog for package tf2_sensor_msgs
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+0.6.6 (2020-01-09)
+------------------
+* Affine->Isometry `#378 <https://github.com/ros/geometry2/issues/378>`_
+* Python 3 compatibility: relative imports and print statement
+* Contributors: Martin Pecka, Timon Engelke, Tully Foote
+
 0.6.5 (2018-11-16)
 ------------------
 
