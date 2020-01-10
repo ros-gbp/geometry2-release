@@ -2,14 +2,39 @@
 Changelog for package tf2_tools
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-0.5.20 (2018-11-16)
--------------------
+0.6.6 (2020-01-09)
+------------------
+* Allow to choose output precision in echo `#377 <https://github.com/ros/geometry2/issues/377>`_ 
+* use yaml.safe_load instead of deprecated yaml.load `#373 <https://github.com/ros/geometry2/issues/373>`_
+* Python 3 compatibility: relative imports and print statement
+* Contributors: Mikael Arguedas, Timon Engelke, Tully Foote, Victor Lamoine
 
-0.5.19 (2018-11-06)
--------------------
+0.6.5 (2018-11-16)
+------------------
 
-0.5.18 (2018-07-10)
--------------------
+0.6.4 (2018-11-06)
+------------------
+
+0.6.3 (2018-07-09)
+------------------
+
+0.6.2 (2018-05-02)
+------------------
+* Tf2 tools echo (`#289 <https://github.com/ros/geometry2/issues/289>`_)
+  * tf2_tools echo is working but not yet printing the rotation `#287 <https://github.com/ros/geometry2/issues/287>`_
+  * install echo.py
+  * Added quaternion output but importing from tf1 for euler_from_quaternion seems wrong (`#222 <https://github.com/ros/geometry2/issues/222>`_) so not doing that yet.  Also made count exit after n counts even if exceptions occurred, also printing time of lookup for exceptions `#287 <https://github.com/ros/geometry2/issues/287>`_
+  * Fixed time query option, also changing message text to be more clear `#287 <https://github.com/ros/geometry2/issues/287>`_
+  * Added bsd license, code from transform3d transformations.py `#287 <https://github.com/ros/geometry2/issues/287>`_
+  * Get rid of tabs
+  * docstring for each function
+* Contributors: Lucas Walter
+
+0.6.1 (2018-03-21)
+------------------
+
+0.6.0 (2018-03-21)
+------------------
 
 0.5.17 (2018-01-01)
 -------------------

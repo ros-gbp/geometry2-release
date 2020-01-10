@@ -2,17 +2,33 @@
 Changelog for package test_tf2
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-0.5.20 (2018-11-16)
--------------------
+0.6.6 (2020-01-09)
+------------------
+* Update shebang and add launch prefixes for python3 support (`#421 <https://github.com/ros/geometry2/issues/421>`_)
+* Always call catkin_package() (`#418 <https://github.com/ros/geometry2/issues/418>`_)
+* Remove roslib.load_manifest `#404 <https://github.com/ros/geometry2/issues/404>`_ from otamachan/remove-load-manifest
+* Contributors: Shane Loretz, Tamaki Nishino, Tully Foote
 
-0.5.19 (2018-11-06)
--------------------
+0.6.5 (2018-11-16)
+------------------
 
-0.5.18 (2018-07-10)
--------------------
+0.6.4 (2018-11-06)
+------------------
+
+0.6.3 (2018-07-09)
+------------------
 * use correct unit test for test_tf2_bullet (`#301 <https://github.com/ros/geometry2/issues/301>`_)
 * update cmake order (`#298 <https://github.com/ros/geometry2/issues/298>`_)
 * Contributors: Tully Foote
+
+0.6.2 (2018-05-02)
+------------------
+
+0.6.1 (2018-03-21)
+------------------
+
+0.6.0 (2018-03-21)
+------------------
 
 0.5.17 (2018-01-01)
 -------------------

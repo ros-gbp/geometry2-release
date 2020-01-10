@@ -2,14 +2,32 @@
 Changelog for package tf2_bullet
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-0.5.20 (2018-11-16)
--------------------
+0.6.6 (2020-01-09)
+------------------
+* Fix compile error missing ros/ros.h (`#400 <https://github.com/ros/geometry2/issues/400>`_)
+  * ros/ros.h -> ros/time.h
+  * tf2_bullet doesn't need ros.h
+  * tf2_eigen doesn't need ros/ros.h
+* use find_package when pkg_check_modules doesn't work (`#364 <https://github.com/ros/geometry2/issues/364>`_)
+* Contributors: James Xu, Shane Loretz
 
-0.5.19 (2018-11-06)
--------------------
+0.6.5 (2018-11-16)
+------------------
 
-0.5.18 (2018-07-10)
--------------------
+0.6.4 (2018-11-06)
+------------------
+
+0.6.3 (2018-07-09)
+------------------
+
+0.6.2 (2018-05-02)
+------------------
+
+0.6.1 (2018-03-21)
+------------------
+
+0.6.0 (2018-03-21)
+------------------
 
 0.5.17 (2018-01-01)
 -------------------

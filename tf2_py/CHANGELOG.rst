@@ -2,18 +2,35 @@
 Changelog for package tf2_py
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-0.5.20 (2018-11-16)
--------------------
+0.6.6 (2020-01-09)
+------------------
+* use .pyd instead of .so on Windows and export symbols `#363 <https://github.com/ros/geometry2/issues/363>`_ from kejxu/fix_tf2_py_export
+* limit MSVC-only change to MSVC scope (`#10 <https://github.com/ros/geometry2/issues/10>`_)
+* Fix the pyd extension and export the init function.
+* use windows counterpart for .so extension
+* Contributors: James Xu, Sean Yen, Tully Foote
 
-0.5.19 (2018-11-06)
--------------------
+0.6.5 (2018-11-16)
+------------------
+
+0.6.4 (2018-11-06)
+------------------
 * fix translation vs rotation typo
   Fixes `#324 <https://github.com/ros/geometry2/issues/324>`_
 * Add python3.7 compatibility.
 * Contributors: Hans Gaiser, Tully Foote
 
-0.5.18 (2018-07-10)
--------------------
+0.6.3 (2018-07-09)
+------------------
+
+0.6.2 (2018-05-02)
+------------------
+
+0.6.1 (2018-03-21)
+------------------
+
+0.6.0 (2018-03-21)
+------------------
 
 0.5.17 (2018-01-01)
 -------------------
