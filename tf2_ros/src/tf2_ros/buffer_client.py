@@ -34,8 +34,6 @@
 #* 
 #* Author: Eitan Marder-Eppstein
 #***********************************************************
-PKG = 'tf2_ros'
-import roslib; roslib.load_manifest(PKG)
 import rospy
 import actionlib
 import tf2_py as tf2
@@ -177,9 +175,9 @@ class BufferClient(tf2_ros.BufferInterface):
         return self.__process_result(self.client.get_result())
 
     def __process_result(self, result):
-        if result == None:
+        if not result:
             raise tf2.TransformException("The BufferServer returned None for result!  Something is likely wrong with the server.")
-        if result.error == None:
+        if not result.error:
             raise tf2.TransformException("The BufferServer returned None for result.error!  Something is likely wrong with the server.")
         if result.error.error != result.error.NO_ERROR:
             if result.error.error == result.error.LOOKUP_ERROR:
