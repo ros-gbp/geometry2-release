@@ -1,0 +1,12 @@
+Source: ros-noetic-tf2-py
+Section: misc
+Priority: optional
+Maintainer: Tully Foote <tfoote@osrfoundation.org>
+Build-Depends: debhelper (>= 9.0.0), ros-noetic-catkin, ros-noetic-rospy, ros-noetic-tf2
+Homepage: http://ros.org/wiki/tf2_py
+Standards-Version: 3.9.2
+
+Package: ros-noetic-tf2-py
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends}, ros-noetic-rospy, ros-noetic-tf2
+Description: The tf2_py package
