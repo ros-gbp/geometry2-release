@@ -2,12 +2,16 @@
 Changelog for package tf2_geometry_msgs
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-0.6.6 (2020-01-09)
+0.7.0 (2020-03-09)
 ------------------
+* Replace kdl packages with rosdep keys (`#447 <https://github.com/ros/geometry2/issues/447>`_)
+* Bump CMake version to avoid CMP0048 warning (`#445 <https://github.com/ros/geometry2/issues/445>`_)
 * Make kdl headers available (`#419 <https://github.com/ros/geometry2/issues/419>`_)
-* Fix python3 compatibility for noetic (`#416 <https://github.com/ros/geometry2/issues/416>`_)
+* FIx python3 compatibility for noetic (`#416 <https://github.com/ros/geometry2/issues/416>`_)
 * add <array> from STL (`#366 <https://github.com/ros/geometry2/issues/366>`_)
 * use ROS_DEPRECATED macro for portability (`#362 <https://github.com/ros/geometry2/issues/362>`_)
+  * use ROS_DEPRECATED for better portability
+  * change ROS_DEPRECATED position (`#5 <https://github.com/ros/geometry2/issues/5>`_)
 * Contributors: James Xu, Shane Loretz, Tully Foote
 
 0.6.5 (2018-11-16)
