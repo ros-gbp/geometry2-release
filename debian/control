@@ -1,0 +1,12 @@
+Source: ros-noetic-tf2-ros
+Section: misc
+Priority: optional
+Maintainer: Tully Foote <tfoote@osrfoundation.org>
+Build-Depends: debhelper (>= 9.0.0), ros-noetic-actionlib, ros-noetic-actionlib-msgs, ros-noetic-catkin (>= 0.5.68), ros-noetic-geometry-msgs, ros-noetic-message-filters (>= 1.11.1), ros-noetic-roscpp, ros-noetic-rosgraph, ros-noetic-rospy, ros-noetic-rostest, ros-noetic-std-msgs, ros-noetic-tf2, ros-noetic-tf2-msgs, ros-noetic-tf2-py, ros-noetic-xmlrpcpp
+Homepage: http://www.ros.org/wiki/tf2_ros
+Standards-Version: 3.9.2
+
+Package: ros-noetic-tf2-ros
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends}, ros-noetic-actionlib, ros-noetic-actionlib-msgs, ros-noetic-geometry-msgs, ros-noetic-message-filters, ros-noetic-roscpp, ros-noetic-rosgraph, ros-noetic-rospy, ros-noetic-std-msgs, ros-noetic-tf2, ros-noetic-tf2-msgs, ros-noetic-tf2-py, ros-noetic-xmlrpcpp
+Description: This package contains the ROS bindings for the tf2 library, for both Python and C++.
