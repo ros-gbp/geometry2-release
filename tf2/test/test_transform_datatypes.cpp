@@ -1,10 +1,10 @@
 /*
- * Copyright (c) 2008, Willow Garage, Inc.
+ * Copyright (c) 2020, Open Source Robotics Foundation, Inc.
  * All rights reserved.
- * 
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- * 
+ *
  *     * Redistributions of source code must retain the above copyright
  *       notice, this list of conditions and the following disclaimer.
  *     * Redistributions in binary form must reproduce the above copyright
@@ -13,7 +13,7 @@
  *     * Neither the name of the Willow Garage, Inc. nor the names of its
  *       contributors may be used to endorse or promote products derived from
  *       this software without specific prior written permission.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -26,39 +26,52 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
  */
+#include <gtest/gtest.h>
+
+#include "tf2/transform_datatypes.h"
+
+#include <string>
 
 
-/** \author Tully Foote */
-
-
-#include "ros/ros.h"
-#include "tf2_msgs/TFMessage.h"
-#include "tf2_ros/static_transform_broadcaster.h"
-#include <algorithm>
-
-namespace tf2_ros {
-
-StaticTransformBroadcaster::StaticTransformBroadcaster()
+TEST(Stamped, assignment)
 {
-  publisher_ = node_.advertise<tf2_msgs::TFMessage>("/tf_static", 100, true);
-};
+  tf2::Stamped<std::string> first("foobar", ros::Time(0), "my_frame_id");
+  tf2::Stamped<std::string> second("baz", ros::Time(0), "my_frame_id");
 
-void StaticTransformBroadcaster::sendTransform(const std::vector<geometry_msgs::TransformStamped> & msgtf)
-{
-  for (const geometry_msgs::TransformStamped& input : msgtf)
-  {
-    auto predicate = [&input](const geometry_msgs::TransformStamped existing) {
-      return input.child_frame_id == existing.child_frame_id;
-    };
-    auto existing = std::find_if(net_message_.transforms.begin(), net_message_.transforms.end(), predicate);
-
-    if (existing != net_message_.transforms.end())
-      *existing = input;
-    else
-      net_message_.transforms.push_back(input);
-  }
-
-  publisher_.publish(net_message_);
+  EXPECT_NE(second, first);
+  second = first;
+  EXPECT_EQ(second, first);
 }
 
+TEST(Stamped, setData)
+{
+  tf2::Stamped<std::string> first("foobar", ros::Time(0), "my_frame_id");
+  tf2::Stamped<std::string> second("baz", ros::Time(0), "my_frame_id");
+
+  EXPECT_NE(second, first);
+  second.setData("foobar");
+  EXPECT_EQ(second, first);
+}
+
+TEST(Stamped, copy_constructor)
+{
+  tf2::Stamped<std::string> first("foobar", ros::Time(0), "my_frame_id");
+  tf2::Stamped<std::string> second(first);
+
+  EXPECT_EQ(second, first);
+}
+
+TEST(Stamped, default_constructor)
+{
+  tf2::Stamped<std::string> first("foobar", ros::Time(0), "my_frame_id");
+  tf2::Stamped<std::string> second;
+
+  EXPECT_NE(second, first);
+}
+
+int main(int argc, char **argv)
+{
+  testing::InitGoogleTest(&argc, argv);
+  ros::Time::init();
+  return RUN_ALL_TESTS();
 }
