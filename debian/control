@@ -1,0 +1,12 @@
+Source: ros-noetic-tf2-geometry-msgs
+Section: misc
+Priority: optional
+Maintainer: Tully Foote <tfoote@osrfoundation.org>
+Build-Depends: debhelper (>= 9.0.0), liborocos-kdl-dev, python3-pykdl, ros-noetic-catkin (>= 0.5.68), ros-noetic-geometry-msgs, ros-noetic-ros-environment, ros-noetic-rostest, ros-noetic-tf2, ros-noetic-tf2-ros
+Homepage: http://www.ros.org/wiki/tf2_ros
+Standards-Version: 3.9.2
+
+Package: ros-noetic-tf2-geometry-msgs
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends}, liborocos-kdl-dev, python3-pykdl, ros-noetic-geometry-msgs, ros-noetic-tf2, ros-noetic-tf2-ros
+Description: tf2_geometry_msgs
