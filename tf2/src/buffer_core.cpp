@@ -268,13 +268,14 @@ bool BufferCore::setTransform(const geometry_msgs::TransformStamped& transform_i
     if (frame == NULL)
       frame = allocateFrame(frame_number, is_static);
 
-    if (frame->insertData(TransformStorage(stripped, lookupOrInsertFrameNumber(stripped.header.frame_id), frame_number)))
+    std::string error_string;
+    if (frame->insertData(TransformStorage(stripped, lookupOrInsertFrameNumber(stripped.header.frame_id), frame_number), &error_string))
     {
       frame_authority_[frame_number] = authority;
     }
     else
     {
-      CONSOLE_BRIDGE_logWarn("TF_OLD_DATA ignoring data from the past for frame %s at time %g according to authority %s\nPossible reasons are listed at http://wiki.ros.org/tf/Errors%%20explained", stripped.child_frame_id.c_str(), stripped.header.stamp.toSec(), authority.c_str());
+      CONSOLE_BRIDGE_logWarn((error_string+" for frame %s at time %lf according to authority %s").c_str(), stripped.child_frame_id.c_str(), stripped.header.stamp.toSec(), authority.c_str());
       return false;
     }
   }
@@ -1258,8 +1259,7 @@ void BufferCore::removeTransformableCallback(TransformableCallbackHandle handle)
 
   {
     boost::mutex::scoped_lock lock(transformable_requests_mutex_);
-    V_TransformableRequest::iterator it = std::remove_if(transformable_requests_.begin(), transformable_requests_.end(), RemoveRequestByCallback(handle));
-    transformable_requests_.erase(it, transformable_requests_.end());
+    std::remove_if(transformable_requests_.begin(), transformable_requests_.end(), RemoveRequestByCallback(handle));
   }
 }
 
@@ -1335,12 +1335,7 @@ struct BufferCore::RemoveRequestByID
 void BufferCore::cancelTransformableRequest(TransformableRequestHandle handle)
 {
   boost::mutex::scoped_lock lock(transformable_requests_mutex_);
-  V_TransformableRequest::iterator it = std::remove_if(transformable_requests_.begin(), transformable_requests_.end(), RemoveRequestByID(handle));
-
-  if (it != transformable_requests_.end())
-  {
-    transformable_requests_.erase(it, transformable_requests_.end());
-  }
+  std::remove_if(transformable_requests_.begin(), transformable_requests_.end(), RemoveRequestByID(handle));
 }
 
 
