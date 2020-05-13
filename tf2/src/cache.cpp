@@ -242,7 +242,7 @@ CompactFrameID TimeCache::getParent(ros::Time time, std::string* error_str)
   return p_temp_1->frame_id_;
 }
 
-bool TimeCache::insertData(const TransformStorage& new_data)
+bool TimeCache::insertData(const TransformStorage& new_data, std::string* error_str)
 {
   L_TransformStorage::iterator storage_it = storage_.begin();
 
@@ -250,6 +250,12 @@ bool TimeCache::insertData(const TransformStorage& new_data)
   {
     if (storage_it->stamp_ > new_data.stamp_ + max_storage_time_)
     {
+      if (error_str)
+      {
+        std::stringstream ss;
+        ss << "TF_OLD_DATA ignoring data from the past (Possible reasons are listed at http://wiki.ros.org/tf/Errors%%20explained)";
+        *error_str = ss.str();
+      }
       return false;
     }
   }
@@ -261,7 +267,20 @@ bool TimeCache::insertData(const TransformStorage& new_data)
       break;
     storage_it++;
   }
-  storage_.insert(storage_it, new_data);
+  if (storage_it != storage_.end() && storage_it->stamp_ == new_data.stamp_)
+  {
+    if (error_str)
+    {
+      std::stringstream ss;
+      ss << "TF_REPEATED_DATA ignoring data with redundant timestamp";
+      *error_str = ss.str();
+    }
+    return false;
+  }
+  else
+  {
+    storage_.insert(storage_it, new_data);
+  }
 
   pruneList();
   return true;
