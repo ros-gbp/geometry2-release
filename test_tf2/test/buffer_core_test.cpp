@@ -27,10 +27,10 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
+#include <cmath>
 #include <gtest/gtest.h>
 #include <tf2/buffer_core.h>
 #include "tf2/exceptions.h"
-#include <sys/time.h>
 #include <ros/ros.h>
 #include "LinearMath/btVector3.h"
 #include "LinearMath/btTransform.h"
@@ -213,11 +213,12 @@ void setupTree(tf2::BufferCore& mBC, const std::string& mode, const ros::Time & 
         else
           ts.header.stamp = ros::Time();
 
-        ts.header.frame_id = frame_prefix + frames[i-1];
+        ts.child_frame_id = frame_prefix + frames[i];
         if (i > 1)
-          ts.child_frame_id = frame_prefix + frames[i];
+          ts.header.frame_id = frame_prefix + frames[i-1];
         else
-          ts.child_frame_id = frames[i]; // connect first frame
+          ts.header.frame_id = frames[i-1];
+
         EXPECT_TRUE(mBC.setTransform(ts, "authority"));
         if (interpolation_space > ros::Duration())
         {
@@ -288,7 +289,7 @@ TEST(BufferCore_setTransform, NoInsertWithNan)
   tranStamped.header.frame_id = "same_frame";
   tranStamped.child_frame_id = "other_frame";
   EXPECT_TRUE(mBC.setTransform(tranStamped, "authority"));
-  tranStamped.transform.translation.x = 0.0/0.0;
+  tranStamped.transform.translation.x = std::nan("");
   EXPECT_TRUE(std::isnan(tranStamped.transform.translation.x));
   EXPECT_FALSE(mBC.setTransform(tranStamped, "authority"));
 
