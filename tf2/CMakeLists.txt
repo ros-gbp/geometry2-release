@@ -23,7 +23,7 @@ add_dependencies(tf2 ${catkin_EXPORTED_TARGETS})
 install(TARGETS tf2
   ARCHIVE DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
   LIBRARY DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
-  RUNTIME DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
+  RUNTIME DESTINATION ${CATKIN_GLOBAL_BIN_DESTINATION}
 )
 
 install(DIRECTORY include/${PROJECT_NAME}/
@@ -49,5 +49,9 @@ add_executable(speed_test EXCLUDE_FROM_ALL test/speed_test.cpp)
 target_link_libraries(speed_test tf2  ${console_bridge_LIBRARIES})
 add_dependencies(tests speed_test)
 add_dependencies(tests ${catkin_EXPORTED_TARGETS})
+
+catkin_add_gtest(test_transform_datatypes test/test_transform_datatypes.cpp)
+target_link_libraries(test_transform_datatypes tf2  ${console_bridge_LIBRARIES})
+add_dependencies(test_transform_datatypes ${catkin_EXPORTED_TARGETS})
 
 endif()
