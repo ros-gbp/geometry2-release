@@ -1,3 +1,41 @@
+## geometry2 (noetic) - 0.7.2-1
+
+The packages in the `geometry2` repository were released into the `noetic` distro by running `/usr/bin/bloom-release geometry2 -r noetic` on `Tue, 09 Jun 2020 00:55:55 -0000`
+
+These packages were released:
+- `geometry2`
+- `tf2`
+- `tf2_bullet`
+- `tf2_eigen`
+- `tf2_geometry_msgs`
+- `tf2_kdl`
+- `tf2_msgs`
+- `tf2_py`
+- `tf2_ros`
+- `tf2_sensor_msgs`
+- `tf2_tools`
+
+These packages were explicitly ignored:
+- `geometry_experimental`
+- `test_tf2`
+
+Version of package(s) in repository `geometry2`:
+
+- upstream repository: https://github.com/ros/geometry_experimental.git
+- release repository: https://github.com/ros-gbp/geometry2-release.git
+- rosdistro version: `0.7.1-1`
+- old version: `0.7.1-1`
+- new version: `0.7.2-1`
+
+Versions of tools used:
+
+- bloom version: `0.9.7`
+- catkin_pkg version: `0.4.20`
+- rosdep version: `0.19.0`
+- rosdistro version: `0.8.2`
+- vcstools version: `0.1.42`
+
+
 ## geometry2 (noetic) - 0.7.1-1
 
 The packages in the `geometry2` repository were released into the `noetic` distro by running `/usr/bin/bloom-release -r noetic geometry2` on `Wed, 13 May 2020 10:05:16 -0000`
