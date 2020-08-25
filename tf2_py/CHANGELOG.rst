@@ -2,6 +2,11 @@
 Changelog for package tf2_py
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+0.7.3 (2020-08-25)
+------------------
+* avoid name collision b/t tf2_py and tf2 (`#478 <https://github.com/ros/geometry2/issues/478>`_)
+* Contributors: Sean Yen
+
 0.7.2 (2020-06-08)
 ------------------
 
