@@ -2,6 +2,12 @@
 Changelog for package tf2_ros
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+0.7.5 (2020-09-01)
+------------------
+
+0.7.4 (2020-09-01)
+------------------
+
 0.7.3 (2020-08-25)
 ------------------
 * Use correct frame service name in docstrings. (`#476 <https://github.com/ros/geometry2/issues/476>`_)
