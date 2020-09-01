@@ -2,6 +2,12 @@
 Changelog for package test_tf2
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+0.7.5 (2020-09-01)
+------------------
+
+0.7.4 (2020-09-01)
+------------------
+
 0.7.3 (2020-08-25)
 ------------------
 * test_tf2: remove unused tf dependency (`#464 <https://github.com/ros/geometry2/issues/464>`_)
