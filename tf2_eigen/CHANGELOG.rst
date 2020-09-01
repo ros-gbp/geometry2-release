@@ -2,6 +2,12 @@
 Changelog for package tf2_eigen
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+0.7.5 (2020-09-01)
+------------------
+
+0.7.4 (2020-09-01)
+------------------
+
 0.7.3 (2020-08-25)
 ------------------
 * Cherry-picking various commits from Melodic (`#471 <https://github.com/ros/geometry2/issues/471>`_)
