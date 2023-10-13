@@ -1,0 +1,178 @@
+ros-noetic-tf2-sensor-msgs (0.7.7-1focal) focal; urgency=high
+
+
+
+ -- Vincent Rabaud <vincent.rabaud@gmail.com>  Fri, 13 Oct 2023 07:00:00 -0000
+
+ros-noetic-tf2-sensor-msgs (0.7.6-1focal) focal; urgency=high
+
+
+
+ -- Vincent Rabaud <vincent.rabaud@gmail.com>  Tue, 11 Oct 2022 07:00:00 -0000
+
+ros-noetic-tf2-sensor-msgs (0.7.5-1focal) focal; urgency=high
+
+
+
+ -- Vincent Rabaud <vincent.rabaud@gmail.com>  Tue, 01 Sep 2020 07:00:00 -0000
+
+ros-noetic-tf2-sensor-msgs (0.7.4-1focal) focal; urgency=high
+
+
+
+ -- Vincent Rabaud <vincent.rabaud@gmail.com>  Tue, 01 Sep 2020 07:00:00 -0000
+
+ros-noetic-tf2-sensor-msgs (0.7.3-1focal) focal; urgency=high
+
+  * Use list instead of set to make build reproducible (#473 <https://github.com/ros/geometry2/issues/473>)
+  * Contributors: Jochen Sprickerhof
+
+ -- Vincent Rabaud <vincent.rabaud@gmail.com>  Tue, 25 Aug 2020 07:00:00 -0000
+
+ros-noetic-tf2-sensor-msgs (0.7.2-1focal) focal; urgency=high
+
+
+
+ -- Vincent Rabaud <vincent.rabaud@gmail.com>  Mon, 08 Jun 2020 07:00:00 -0000
+
+ros-noetic-tf2-sensor-msgs (0.7.1-1focal) focal; urgency=high
+
+  * import setup from setuptools instead of distutils-core (#449 <https://github.com/ros/geometry2/issues/449>)
+  * Contributors: Alejandro Hernández Cordero
+
+ -- Vincent Rabaud <vincent.rabaud@gmail.com>  Wed, 13 May 2020 07:00:00 -0000
+
+ros-noetic-tf2-sensor-msgs (0.7.0-1focal) focal; urgency=high
+
+  * Replace kdl packages with rosdep keys (#447 <https://github.com/ros/geometry2/issues/447>)
+  * Bump CMake version to avoid CMP0048 warning (#445 <https://github.com/ros/geometry2/issues/445>)
+  * Merge pull request #378 <https://github.com/ros/geometry2/issues/378> from peci1/tf2_sensor_msgs_isometry
+    Affine->Isometry
+  * Python 3 compatibility: relative imports and print statement
+  * Contributors: Martin Pecka, Shane Loretz, Timon Engelke, Tully Foote
+
+ -- Vincent Rabaud <vincent.rabaud@gmail.com>  Mon, 09 Mar 2020 07:00:00 -0000
+
+ros-noetic-tf2-sensor-msgs (0.6.5-1focal) focal; urgency=high
+
+
+
+ -- Vincent Rabaud <vincent.rabaud@gmail.com>  Fri, 16 Nov 2018 08:00:00 -0000
+
+ros-noetic-tf2-sensor-msgs (0.6.4-1focal) focal; urgency=high
+
+
+
+ -- Vincent Rabaud <vincent.rabaud@gmail.com>  Tue, 06 Nov 2018 08:00:00 -0000
+
+ros-noetic-tf2-sensor-msgs (0.6.3-1focal) focal; urgency=high
+
+
+
+ -- Vincent Rabaud <vincent.rabaud@gmail.com>  Mon, 09 Jul 2018 07:00:00 -0000
+
+ros-noetic-tf2-sensor-msgs (0.6.2-1focal) focal; urgency=high
+
+
+
+ -- Vincent Rabaud <vincent.rabaud@gmail.com>  Wed, 02 May 2018 07:00:00 -0000
+
+ros-noetic-tf2-sensor-msgs (0.6.1-1focal) focal; urgency=high
+
+
+
+ -- Vincent Rabaud <vincent.rabaud@gmail.com>  Wed, 21 Mar 2018 07:00:00 -0000
+
+ros-noetic-tf2-sensor-msgs (0.6.0-1focal) focal; urgency=high
+
+
+
+ -- Vincent Rabaud <vincent.rabaud@gmail.com>  Wed, 21 Mar 2018 07:00:00 -0000
+
+ros-noetic-tf2-sensor-msgs (0.5.17-1focal) focal; urgency=high
+
+  * Merge pull request #257 <https://github.com/ros/geometry2/issues/257> from delftrobotics-forks/python3
+    Make tf2_py python3 compatible again
+  * Use python3 print function.
+  * Contributors: Maarten de Vries, Tully Foote
+
+ -- Vincent Rabaud <vincent.rabaud@gmail.com>  Mon, 01 Jan 2018 08:00:00 -0000
+
+ros-noetic-tf2-sensor-msgs (0.5.16-1focal) focal; urgency=high
+
+  * Fix do_transform_cloud for multi-channelled pointcloud2. (#241 <https://github.com/ros/geometry2/issues/241>)
+  * store gtest return value as int (#229 <https://github.com/ros/geometry2/issues/229>)
+  * Document the lifetime of the returned reference for getFrameId and getTimestamp
+  * Find eigen in a much nicer way.
+  * Switch tf2_sensor_msgs over to package format 2.
+  * Contributors: Atsushi Watanabe, Chris Lalancette, dhood
+
+ -- Vincent Rabaud <vincent.rabaud@gmail.com>  Fri, 14 Jul 2017 07:00:00 -0000
+
+ros-noetic-tf2-sensor-msgs (0.5.15-1focal) focal; urgency=high
+
+
+
+ -- Vincent Rabaud <vincent.rabaud@gmail.com>  Tue, 24 Jan 2017 08:00:00 -0000
+
+ros-noetic-tf2-sensor-msgs (0.5.14-1focal) focal; urgency=high
+
+
+
+ -- Vincent Rabaud <vincent.rabaud@gmail.com>  Mon, 16 Jan 2017 08:00:00 -0000
+
+ros-noetic-tf2-sensor-msgs (0.5.13-1focal) focal; urgency=high
+
+  * add missing Python runtime dependency
+  * fix wrong comment
+  * Adding tests to package
+  * Fixing do_transform_cloud for python
+    The previous code was not used at all (it was a mistake in the __init__.py so
+    the do_transform_cloud was not available to the python users).
+    The python code need some little correction (e.g there is no method named
+    read_cloud but it's read_points for instance, and as we are in python we can't
+    use the same trick as in c++ when we got an immutable)
+  * Contributors: Laurent GEORGE, Vincent Rabaud
+
+ -- Vincent Rabaud <vincent.rabaud@gmail.com>  Fri, 04 Mar 2016 08:00:00 -0000
+
+ros-noetic-tf2-sensor-msgs (0.5.12-1focal) focal; urgency=high
+
+
+
+ -- Vincent Rabaud <vincent.rabaud@gmail.com>  Wed, 05 Aug 2015 07:00:00 -0000
+
+ros-noetic-tf2-sensor-msgs (0.5.11-1focal) focal; urgency=high
+
+
+
+ -- Vincent Rabaud <vincent.rabaud@gmail.com>  Wed, 22 Apr 2015 07:00:00 -0000
+
+ros-noetic-tf2-sensor-msgs (0.5.10-1focal) focal; urgency=high
+
+
+
+ -- Vincent Rabaud <vincent.rabaud@gmail.com>  Tue, 21 Apr 2015 07:00:00 -0000
+
+ros-noetic-tf2-sensor-msgs (0.5.9-1focal) focal; urgency=high
+
+
+
+ -- Vincent Rabaud <vincent.rabaud@gmail.com>  Wed, 25 Mar 2015 07:00:00 -0000
+
+ros-noetic-tf2-sensor-msgs (0.5.8-1focal) focal; urgency=high
+
+  * ODR violation fixes and more conversions
+  * Fix keeping original pointcloud header in transformed pointcloud
+  * Contributors: Paul Bovbel, Tully Foote, Vincent Rabaud
+
+ -- Vincent Rabaud <vincent.rabaud@gmail.com>  Tue, 17 Mar 2015 07:00:00 -0000
+
+ros-noetic-tf2-sensor-msgs (0.5.7-1focal) focal; urgency=high
+
+  * add support for transforming sensor_msgs::PointCloud2
+  * Contributors: Vincent Rabaud
+
+ -- Vincent Rabaud <vincent.rabaud@gmail.com>  Tue, 23 Dec 2014 08:00:00 -0000
+
+
