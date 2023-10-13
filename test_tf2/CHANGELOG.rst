@@ -2,6 +2,9 @@
 Changelog for package test_tf2
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+0.7.7 (2023-10-13)
+------------------
+
 0.7.6 (2022-10-11)
 ------------------
 * Switch to new boost/bind/bind.hpp (`#528 <https://github.com/ros/geometry2/issues/528>`_)
