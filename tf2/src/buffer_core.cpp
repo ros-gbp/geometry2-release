@@ -38,6 +38,7 @@
 #include <console_bridge/console.h>
 #include "tf2/LinearMath/Transform.h"
 #include <boost/foreach.hpp>
+#include <boost/tuple/tuple.hpp>
 
 namespace tf2
 {
@@ -870,7 +871,7 @@ bool BufferCore::canTransform(const std::string& target_frame, const ros::Time& 
           }
           *error_msg += std::string("canTransform: source_frame " + source_frame + " does not exist.");
         }
-        if (source_id == 0)
+        if (fixed_id == 0)
         {
           if (target_id == 0 || source_id == 0)
           {
