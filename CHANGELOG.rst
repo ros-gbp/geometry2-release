@@ -2,6 +2,9 @@
 Changelog for package tf2
 ^^^^^^^^^^^^^^^^^^^^^^^^^
 
+0.7.9 (2025-04-25)
+------------------
+
 0.7.8 (2025-04-10)
 ------------------
 * Longer char array for null termination needed  (`#514 <https://github.com/ros/geometry2/issues/514>`_)
