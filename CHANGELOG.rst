@@ -2,6 +2,11 @@
 Changelog for package tf2
 ^^^^^^^^^^^^^^^^^^^^^^^^^
 
+0.7.10 (2025-05-02)
+-------------------
+* Fix race conditions in MessageFilter (`#539 <https://github.com/ros/geometry2/issues/539>`_)
+* Contributors: Robert Haschke
+
 0.7.9 (2025-04-25)
 ------------------
 
