@@ -2,6 +2,9 @@
 Changelog for package tf2_py
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+0.7.10 (2025-05-02)
+-------------------
+
 0.7.9 (2025-04-25)
 ------------------
 * Fix Python Linking on OSX (`#502 <https://github.com/ros/geometry2/issues/502>`_)
